@@ -1,0 +1,46 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+    <ApplicationIcon>Assets\CardPrint.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="MyClassBuilder.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Assets\640px-Dormakaba_logo.png" />
+    <None Remove="Assets\FLR_Logo.png" />
+    <None Remove="Assets\icons8-datei-importieren.png" />
+    <None Remove="Assets\icons8-drucken.png" />
+    <None Remove="Assets\icons8-zeile-löschen.png" />
+    <None Remove="Assets\icons8-zeile-oberhalb-einfügen.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Assets\CardPrint.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\640px-Dormakaba_logo.png" />
+    <Resource Include="Assets\FLR_Logo.png" />
+    <Resource Include="Assets\icons8-datei-importieren.png" />
+    <Resource Include="Assets\icons8-drucken.png" />
+    <Resource Include="Assets\icons8-zeile-löschen.png" />
+    <Resource Include="Assets\icons8-zeile-oberhalb-einfügen.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.0.0" />
+    <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Utilities\" />
+  </ItemGroup>
+
+</Project>
