@@ -7,13 +7,13 @@
         xmlns:vm="clr-namespace:Cardprint.ViewModels"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance Type=vm:MainWindowViewModel}"
-        Title="MainWindowView" Height="450" Width="1000"
+        Title="CardPrint" Height="450" Width="1000"
         MinHeight="450"
         MinWidth="1000"
         WindowStartupLocation="CenterScreen"
         >
     <Window.Resources>
-        <ResourceDictionary Source="../ResourceDictionarys/Dictionary1.xaml"/>
+        <ResourceDictionary Source="../ResourceDictionarys/StyleDictionary.xaml"/>
     </Window.Resources>
     
     <Grid>
@@ -28,7 +28,7 @@
         </Grid.ColumnDefinitions>
         <Menu Grid.Row="0" Grid.ColumnSpan="2">
             <MenuItem Header="Datei">
-                <MenuItem Header="Einstellungen"></MenuItem>
+                <MenuItem Header="Einstellungen" Command="{Binding OpenSettingsCommand}"></MenuItem>
             </MenuItem>
         </Menu>
         <StackPanel Grid.Row="1" VerticalAlignment="Bottom" Margin="10,0,10,0">

@@ -9,9 +9,11 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using Cardprint.Models;
+using Cardprint.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Linq;
+using Cardprint.Properties;
 
 
 
@@ -21,8 +23,11 @@ namespace Cardprint.ViewModels;
 [ObservableObject]
 public partial class MainWindowViewModel 
 {
-    const int viewSize = 8;
+    int ViewSize { get { return Settings.Default.Resolution; } }
+
     public Action<string[]> OnSelectedLayoutChanges;
+
+
 
 
     //Layouts
@@ -114,6 +119,12 @@ public partial class MainWindowViewModel
         if (item != null) PrintContentList.Remove(item);
 
     }
+    [RelayCommand]
+    private void OpenSettings()
+    {
+        var win = new SettingsView();
+        win.Show();
+    }
 
 
     private void SetView(LayoutModel layout)
@@ -123,8 +134,8 @@ public partial class MainWindowViewModel
 
         Canvas.Children.Clear();
 
-        var width = 3235 / viewSize;
-        var height = 2022 / viewSize;
+        var width = 3235 / ViewSize;
+        var height = 2022 / ViewSize;
         Canvas.Width = width;
         Canvas.Height = height;
 
@@ -135,8 +146,8 @@ public partial class MainWindowViewModel
             label.FontSize = field.Size;
             Canvas.Children.Add(label);
 
-            Canvas.SetTop(label, field.YCord * viewSize);
-            Canvas.SetLeft(label, field.XCord * viewSize);
+            Canvas.SetTop(label, field.YCord * ViewSize);
+            Canvas.SetLeft(label, field.XCord * ViewSize);
         }
     }
 
@@ -144,8 +155,8 @@ public partial class MainWindowViewModel
     {
         ViewBackground.Children.Clear();
 
-        var width = 3235 / viewSize;
-        var height = 2022 / viewSize;
+        var width = 3235 / ViewSize;
+        var height = 2022 / ViewSize;
         ViewBackground.Width = width;
         ViewBackground.Height = height;
         
