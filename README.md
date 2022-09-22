@@ -8,3 +8,6 @@ Minimalist SmartCard print Tool.
 - Load data from .xlsx or csv Files
 - Print a single or multiple Cards
 - printed cards are being documented!
+
+
+![Main View](https://raw.githubusercontent.com/FlorianRedl/Cardprint/master/Assets/Screenshot_MainView.png)
