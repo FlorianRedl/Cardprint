@@ -1,5 +1,5 @@
 # Cardprint
-Minimalist SmartCard print Tool.
+Minimalist Tool to print SmartCards with predefined fields that can be dynamically filled with data.
 
 
 
