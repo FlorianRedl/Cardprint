@@ -24,5 +24,9 @@ public partial class SettingsView : Window
     {
         DataContext = SettingsViewModel = new SettingsViewModel();
         InitializeComponent();
+
+
     }
+
+
 }

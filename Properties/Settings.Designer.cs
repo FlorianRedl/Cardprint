@@ -25,7 +25,7 @@ namespace Cardprint.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Printer 2")]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string SelectedPrinter {
             get {
                 return ((string)(this["SelectedPrinter"]));

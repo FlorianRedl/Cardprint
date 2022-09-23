@@ -7,7 +7,15 @@
         xmlns:vm="clr-namespace:Cardprint.ViewModels"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance Type=vm:SettingsViewModel}"
-        Title="SettingsView" Height="300" Width="800">
+        Title="SettingsView" 
+        Height="300"
+        MinHeight="300"
+        Width="800"
+        MinWidth="800"
+        WindowStartupLocation="CenterScreen"
+        x:Name="window"
+       
+        >
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -19,32 +27,29 @@
         </Border>
 
         <DockPanel Grid.Row="0"  Grid.Column="1" Margin="10">
-            <GroupBox DockPanel.Dock="Top" Header="Card ">
+            <GroupBox DockPanel.Dock="Top" Header="General">
                 <StackPanel>
-                    <DockPanel>
-                    <Label Content="Resolution:" Width="100" HorizontalContentAlignment="Right" />
-                    <TextBox Text="{Binding Resolution}"/>
-                    </DockPanel>
-                    <DockPanel>
-                        <Label Content="Size" Width="100" HorizontalContentAlignment="Right" />
-                        <TextBox/>
-                    </DockPanel>
+                    
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="Viewsize:" Width="100" HorizontalContentAlignment="Right" />
+                        <TextBox Margin="2" Width="50"/>
+                    </StackPanel>
                 </StackPanel>
             </GroupBox>
-            <GroupBox DockPanel.Dock="Top" Header="Card ">
+            <GroupBox DockPanel.Dock="Top" Header="Print">
                 <StackPanel>
-                    <DockPanel>
-                        <Label Content="Resolution:" Width="100" HorizontalContentAlignment="Right" />
-                        <TextBox/>
-                    </DockPanel>
-                    <DockPanel>
-                        <Label Content="Size" Width="100" HorizontalContentAlignment="Right" />
-                        <TextBox/>
-                    </DockPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Label  Content="Print Resolution:" Width="100" HorizontalContentAlignment="Right"  />
+                        <TextBox  Text="{Binding Resolution}" Width="50" Margin="2"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Label  Content="Default Printer:" Width="100" HorizontalContentAlignment="Right"  />
+                        <ComboBox ItemsSource="{Binding Printers}" SelectedItem="{Binding SelectedPrinter}" Width="200" Margin="2"/>
+                    </StackPanel>
                 </StackPanel>
             </GroupBox>
             <StackPanel DockPanel.Dock="Bottom" VerticalAlignment="Bottom">
-                <Button Content="Save" Command="{Binding SaveCommand}" Width="80" VerticalAlignment="Bottom" HorizontalAlignment="Right" />
+                <Button Content="Save" Command="{Binding SaveCommand}" CommandParameter="{Binding ElementName=window}" Width="80" VerticalAlignment="Bottom" HorizontalAlignment="Right" />
             </StackPanel>
         </DockPanel>
 

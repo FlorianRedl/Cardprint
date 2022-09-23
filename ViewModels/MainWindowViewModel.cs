@@ -93,7 +93,7 @@ public partial class MainWindowViewModel
     {
 
         PrintDialog pd = new PrintDialog();
-        PrintQueue queue = new LocalPrintServer().GetPrintQueue("Microsoft Print to PDF");
+        PrintQueue queue = new LocalPrintServer().GetPrintQueue("Microsoft Print to PDF");        
         pd.PrintQueue = queue;
         pd.PrintVisual(Canvas, "printing canvas");
 

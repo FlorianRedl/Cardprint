@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="SelectedPrinter" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Printer 2</Value>
+      <Value Profile="(Default)" />
     </Setting>
     <Setting Name="Resolution" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">8</Value>
