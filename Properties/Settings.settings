@@ -5,7 +5,10 @@
     <Setting Name="SelectedPrinter" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="Resolution" Type="System.Int32" Scope="User">
+    <Setting Name="PrintResolution" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">8</Value>
+    </Setting>
+    <Setting Name="ViewSize" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">8</Value>
     </Setting>
   </Settings>

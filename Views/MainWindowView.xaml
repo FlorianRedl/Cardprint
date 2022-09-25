@@ -27,8 +27,11 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Menu Grid.Row="0" Grid.ColumnSpan="2">
-            <MenuItem Header="Datei">
+            <MenuItem Header="Data">
                 <MenuItem Header="Einstellungen" Command="{Binding OpenSettingsCommand}"></MenuItem>
+            </MenuItem>
+            <MenuItem Header="Help">
+                <MenuItem Header="About CardPrint" ></MenuItem>
             </MenuItem>
         </Menu>
         <StackPanel Grid.Row="1" VerticalAlignment="Bottom" Margin="10,0,10,0">
@@ -73,14 +76,15 @@
            
             <DataGrid Grid.Row="0" Grid.Column="1" 
                       ItemsSource="{Binding PrintContentList, Mode=TwoWay}" 
-                      x:Name="Datagrid" 
+                      x:Name="DatagridPrintContent" 
                       CanUserAddRows="False" 
                       AutoGenerateColumns="False"
                       CanUserDeleteRows="False" 
                       CanUserReorderColumns="False" 
                       CanUserResizeRows="False" 
                       RowHeaderWidth="0"
-                      SelectedValue="{Binding SelectedPrintContent}">
+                      SelectedValue="{Binding SelectedPrintContent}"
+                      SelectionChanged="Datagrid_SelectionChanged">
                       
                 </DataGrid>
             

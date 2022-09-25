@@ -38,12 +38,24 @@ namespace Cardprint.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("8")]
-        public int Resolution {
+        public int PrintResolution {
             get {
-                return ((int)(this["Resolution"]));
+                return ((int)(this["PrintResolution"]));
             }
             set {
-                this["Resolution"] = value;
+                this["PrintResolution"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("8")]
+        public int ViewSize {
+            get {
+                return ((int)(this["ViewSize"]));
+            }
+            set {
+                this["ViewSize"] = value;
             }
         }
     }

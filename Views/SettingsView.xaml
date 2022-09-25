@@ -32,7 +32,7 @@
                     
                     <StackPanel Orientation="Horizontal">
                         <Label Content="Viewsize:" Width="100" HorizontalContentAlignment="Right" />
-                        <TextBox Margin="2" Width="50"/>
+                        <TextBox Text="{Binding ViewSize}" Margin="2" Width="50"/>
                     </StackPanel>
                 </StackPanel>
             </GroupBox>
@@ -40,7 +40,7 @@
                 <StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <Label  Content="Print Resolution:" Width="100" HorizontalContentAlignment="Right"  />
-                        <TextBox  Text="{Binding Resolution}" Width="50" Margin="2"/>
+                        <TextBox  Text="{Binding PrintResolution}" Width="50" Margin="2"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <Label  Content="Default Printer:" Width="100" HorizontalContentAlignment="Right"  />

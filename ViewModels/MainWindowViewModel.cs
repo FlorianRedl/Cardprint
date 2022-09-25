@@ -23,7 +23,8 @@ namespace Cardprint.ViewModels;
 [ObservableObject]
 public partial class MainWindowViewModel 
 {
-    int ViewSize { get { return Settings.Default.Resolution; } }
+    int viewSize { get { return Settings.Default.ViewSize; } }
+    int printResolution { get { return Settings.Default.PrintResolution; } }
 
     public Action<string[]> OnSelectedLayoutChanges;
 
@@ -52,6 +53,11 @@ public partial class MainWindowViewModel
     // PrintContent
     [ObservableProperty]
     public float selectedIndex = 1;
+    [ObservableProperty]
+    public List<PrintContent> selectedPrintContents;
+
+
+
     [ObservableProperty]
     public List<string> printContentHeaders;
     [ObservableProperty]
@@ -88,17 +94,7 @@ public partial class MainWindowViewModel
 
     
 
-    [RelayCommand]
-    private void Print()
-    {
-
-        PrintDialog pd = new PrintDialog();
-        PrintQueue queue = new LocalPrintServer().GetPrintQueue("Microsoft Print to PDF");        
-        pd.PrintQueue = queue;
-        pd.PrintVisual(Canvas, "printing canvas");
-
-
-    }
+    
     [RelayCommand]
     private void SelectedItemChanged()
     {
@@ -134,8 +130,8 @@ public partial class MainWindowViewModel
 
         Canvas.Children.Clear();
 
-        var width = 3235 / ViewSize;
-        var height = 2022 / ViewSize;
+        var width = 3235 / viewSize;
+        var height = 2022 / viewSize;
         Canvas.Width = width;
         Canvas.Height = height;
 
@@ -146,8 +142,8 @@ public partial class MainWindowViewModel
             label.FontSize = field.Size;
             Canvas.Children.Add(label);
 
-            Canvas.SetTop(label, field.YCord * ViewSize);
-            Canvas.SetLeft(label, field.XCord * ViewSize);
+            Canvas.SetLeft(label, field.XCord * viewSize);
+            Canvas.SetTop(label, field.YCord * viewSize);
         }
     }
 
@@ -155,8 +151,8 @@ public partial class MainWindowViewModel
     {
         ViewBackground.Children.Clear();
 
-        var width = 3235 / ViewSize;
-        var height = 2022 / ViewSize;
+        var width = 3235 / viewSize;
+        var height = 2022 / viewSize;
         ViewBackground.Width = width;
         ViewBackground.Height = height;
         
@@ -178,5 +174,56 @@ public partial class MainWindowViewModel
 
 
     }
-    
+
+
+    //----- Printing -----
+    [RelayCommand]
+    private void Print()
+    {
+
+        PrintDialog pd = new PrintDialog();
+        PrintQueue queue = new LocalPrintServer().GetPrintQueue(Settings.Default.SelectedPrinter);
+        pd.PrintQueue = queue;
+
+        //PageMediaSize pageSize = new PageMediaSize(PageMediaSizeName.CreditCard);
+        //pd.PrintTicket.PageMediaSize = pageSize;
+        var pv = GetPrintCanvas(SelectedPrintContent ,SelectedLayout);
+        pd.PrintVisual(pv, "printing Card");
+
+
+    }
+
+    private Canvas GetPrintCanvas(PrintContent pc, LayoutModel layout)
+    {
+
+        var canvas = new Canvas();;
+        var width = 3235 / printResolution;
+        var height = 2040 / printResolution;
+        canvas.Width = width;
+        canvas.Height = height;
+        canvas.Arrange(new Rect(new Size(width,height)));        
+
+     
+
+        int fieldIndex = 1;
+        foreach (var field in layout.Fields)
+        {
+            Label label = new Label();
+            var name = GetPropValue(pc, $"Field{fieldIndex}");
+            label.Content = name;
+            label.FontSize = field.Size;
+            canvas.Children.Add(label);
+            Canvas.SetTop(label, field.YCord * printResolution);
+            Canvas.SetLeft(label, field.XCord * printResolution);
+            fieldIndex++;
+        }
+
+        return canvas;
+
+    }
+
+    public static object GetPropValue(object src, string propName)
+    {
+        return src.GetType().GetProperty(propName).GetValue(src, null);
+    }
 }

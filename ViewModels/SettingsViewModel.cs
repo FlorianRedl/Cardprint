@@ -14,9 +14,10 @@ namespace Cardprint.ViewModels;
 [ObservableObject]
 internal partial class SettingsViewModel
 {
-
     [ObservableProperty]
-    public int resolution;
+    public int viewSize;
+    [ObservableProperty]
+    public int printResolution;
     [ObservableProperty]
     public List<string> printers;
     [ObservableProperty]
@@ -27,8 +28,9 @@ internal partial class SettingsViewModel
         var p = System.Drawing.Printing.PrinterSettings.InstalledPrinters;
         Printers = p.Cast<string>().ToList();
 
-        Resolution = Settings.Default.Resolution;
+        printResolution = Settings.Default.PrintResolution;
         SelectedPrinter = Settings.Default.SelectedPrinter;
+        ViewSize = Settings.Default.ViewSize;
     }
 
     
@@ -36,7 +38,8 @@ internal partial class SettingsViewModel
     [RelayCommand]
     private void Save(object obj)
     {
-        Settings.Default.Resolution = resolution;
+        Settings.Default.PrintResolution = PrintResolution;
+        Settings.Default.ViewSize = ViewSize;
         Settings.Default.SelectedPrinter = SelectedPrinter;
 
         Settings.Default.Save();
