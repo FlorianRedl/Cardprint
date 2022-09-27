@@ -49,10 +49,10 @@ namespace Cardprint.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("8")]
-        public int ViewSize {
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public double ViewSize {
             get {
-                return ((int)(this["ViewSize"]));
+                return ((double)(this["ViewSize"]));
             }
             set {
                 this["ViewSize"] = value;

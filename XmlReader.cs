@@ -33,9 +33,9 @@ public static class XmlReader
     {
         XmlDocument doc = new XmlDocument();
         doc.Load(filePath);
-        var ln =Path.GetFileNameWithoutExtension(filePath);
+        var layoutName = Path.GetFileNameWithoutExtension(filePath);
         var backgroundImg = doc.GetElementsByTagName("backgroundImg").Item(0)?.InnerText;
-
+        var format = doc.GetElementsByTagName("Format").Item(0)?.InnerText;
         var fields = doc.GetElementsByTagName("field");
         List<FieldModel> fieldsList = new List<FieldModel>();
         foreach (XmlNode field in fields)
@@ -61,6 +61,6 @@ public static class XmlReader
             }
             fieldsList.Add(fieldModel);
         }
-        return new LayoutModel(1, ln, backgroundImg, fieldsList);
+        return new LayoutModel(0, layoutName, backgroundImg, format, fieldsList);
     }
 }

@@ -22,9 +22,12 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <Border Grid.Row="0"  Grid.Column="0" Margin="10" ClipToBounds="True" BorderBrush="#A2A2A2" BorderThickness="2" Background="Transparent">
+        <Canvas Grid.Row="0"  Grid.Column="0" Margin="10" Background="AliceBlue">
+            <Label Canvas.Top="5" Canvas.Left="0" Content="88888" Padding="0"/>
+        </Canvas>
+        <!--<Border  ClipToBounds="True" BorderBrush="#A2A2A2" BorderThickness="2" Background="Transparent">
             <ContentPresenter />
-        </Border>
+        </Border>-->
 
         <DockPanel Grid.Row="0"  Grid.Column="1" Margin="10">
             <GroupBox DockPanel.Dock="Top" Header="General">

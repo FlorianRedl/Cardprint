@@ -15,7 +15,7 @@ namespace Cardprint.ViewModels;
 internal partial class SettingsViewModel
 {
     [ObservableProperty]
-    public int viewSize;
+    public double viewSize;
     [ObservableProperty]
     public int printResolution;
     [ObservableProperty]

@@ -23,11 +23,10 @@ namespace Cardprint.ViewModels;
 [ObservableObject]
 public partial class MainWindowViewModel 
 {
-    int viewSize { get { return Settings.Default.ViewSize; } }
-    int printResolution { get { return Settings.Default.PrintResolution; } }
+    double viewSize { get { return Settings.Default.ViewSize; } } // 0.1 bis +2
+    int printResolution { get { return Settings.Default.PrintResolution; } } // nötig ?
 
     public Action<string[]> OnSelectedLayoutChanges;
-
 
 
 
@@ -38,26 +37,14 @@ public partial class MainWindowViewModel
     public LayoutModel selectedLayout;
     partial void OnSelectedLayoutChanging(LayoutModel? layout)
     {
-        SetView(layout);
-        SetNewPrintContent(layout);
+        LoadView(layout);
     }
 
-    private void SetNewPrintContent(LayoutModel layout)
-    {
-        PrintContentList.Clear();
-        printContentHeaders = layout.Fields.Select(s => s.Name).ToList();
-        OnSelectedLayoutChanges?.Invoke(printContentHeaders.ToArray());
-        PrintContentList.Add(new PrintContent());
-    }
-    
     // PrintContent
     [ObservableProperty]
     public float selectedIndex = 1;
     [ObservableProperty]
     public List<PrintContent> selectedPrintContents;
-
-
-
     [ObservableProperty]
     public List<string> printContentHeaders;
     [ObservableProperty]
@@ -67,11 +54,10 @@ public partial class MainWindowViewModel
     partial void OnSelectedPrintContentChanging(PrintContent? layout)
     {
       
-
     }
 
     [ObservableProperty]
-    public Canvas canvas;
+    public Canvas view;
 
     [ObservableProperty]
     public Canvas viewBackground;
@@ -81,20 +67,12 @@ public partial class MainWindowViewModel
     {
         
         Layouts = new ObservableCollection<LayoutModel>(XmlReader.GetLayouts());
-        //Printers
-        var s = System.Drawing.Printing.PrinterSettings.InstalledPrinters;
-
-        Canvas = new Canvas();
-        ViewBackground = new Canvas();
         printContentHeaders = new List<string>();
         printContentList = new ObservableCollection<PrintContent>(DataAccess.GetPrintContentToLayout());
 
-
     }
 
-    
 
-    
     [RelayCommand]
     private void SelectedItemChanged()
     {
@@ -126,36 +104,46 @@ public partial class MainWindowViewModel
     private void SetView(LayoutModel layout)
     {
 
-        LoadViewBackground(layout);
+        ViewBackground = GetViewBackground(layout);
+        View = GetCanvas(null, layout);
 
-        Canvas.Children.Clear();
-
-        var width = 3235 / viewSize;
-        var height = 2022 / viewSize;
-        Canvas.Width = width;
-        Canvas.Height = height;
-
-        foreach (var field in layout.Fields)
-        {
-            Label label = new Label();
-            label.Content = field.Name;
-            label.FontSize = field.Size;
-            Canvas.Children.Add(label);
-
-            Canvas.SetLeft(label, field.XCord * viewSize);
-            Canvas.SetTop(label, field.YCord * viewSize);
-        }
     }
 
-    private void LoadViewBackground(LayoutModel layout)
+    private void LoadView(LayoutModel layout)
     {
-        ViewBackground.Children.Clear();
+        if (layout == null) return;
+        if (layout.IsError())
+        {
+            ClearView();
+            MessageBox.Show("Layout fehlerhaft!");
+            return;
+        }
+        SetView(layout);
+        SetNewPrintContent(layout);
+    }
+    private void ClearView()
+    {
+        View = null;
+        ViewBackground = null;
+    }
 
-        var width = 3235 / viewSize;
-        var height = 2022 / viewSize;
-        ViewBackground.Width = width;
-        ViewBackground.Height = height;
-        
+    private void SetNewPrintContent(LayoutModel layout)
+    {
+        PrintContentList.Clear();
+        printContentHeaders = layout.Fields.Select(s => s.Name).ToList();
+        OnSelectedLayoutChanges?.Invoke(printContentHeaders.ToArray());
+        PrintContentList.Add(new PrintContent());
+    }
+
+    private Canvas GetViewBackground(LayoutModel layout)
+    {
+        Canvas canvas = new();
+
+
+        var width = Utilities.MillimeterToPixel(layout.FormatSize.height, viewSize) ;
+        var height = Utilities.MillimeterToPixel(layout.FormatSize.width, viewSize) ;
+        canvas.Width = width;
+        canvas.Height = height;
 
         Border border = new Border();
         border.BorderThickness = new System.Windows.Thickness(2);
@@ -164,14 +152,15 @@ public partial class MainWindowViewModel
         border.Width = width;
         border.Height = height;
 
+
         if (layout.BackgroundImg != null)
         {
             Image img = new Image();
             img.Source = new BitmapImage(new Uri(layout.BackgroundImg));
             border.Child = img;
         }
-        ViewBackground.Children.Add(border);
-
+        canvas.Children.Add(border);
+        return canvas;
 
     }
 
@@ -185,36 +174,53 @@ public partial class MainWindowViewModel
         PrintQueue queue = new LocalPrintServer().GetPrintQueue(Settings.Default.SelectedPrinter);
         pd.PrintQueue = queue;
 
-        //PageMediaSize pageSize = new PageMediaSize(PageMediaSizeName.CreditCard);
-        //pd.PrintTicket.PageMediaSize = pageSize;
-        var pv = GetPrintCanvas(SelectedPrintContent ,SelectedLayout);
-        pd.PrintVisual(pv, "printing Card");
+        if(pd.ShowDialog() == true)
+        {
+
+            //PageMediaSize pageSize = new PageMediaSize(PageMediaSizeName.CreditCard);
+            //pd.PrintTicket.PageMediaSize = pageSize;
+            var pv = GetCanvas(SelectedPrintContent ,SelectedLayout);
+            pd.PrintVisual(pv, "printing Card");
+        }
 
 
     }
 
-    private Canvas GetPrintCanvas(PrintContent pc, LayoutModel layout)
+    private Canvas GetCanvas(PrintContent? pc, LayoutModel layout)
     {
 
-        var canvas = new Canvas();;
-        var width = 3235 / printResolution;
-        var height = 2040 / printResolution;
+        var canvas = new Canvas();
+        var width = Utilities.MillimeterToPixel(layout.FormatSize.height, viewSize);
+        var height = Utilities.MillimeterToPixel(layout.FormatSize.width, viewSize);
         canvas.Width = width;
         canvas.Height = height;
-        canvas.Arrange(new Rect(new Size(width,height)));        
-
-     
+        canvas.Arrange(new Rect(new Size(width,height)));
+        canvas.Background = new SolidColorBrush(Colors.Beige);
 
         int fieldIndex = 1;
         foreach (var field in layout.Fields)
         {
+
             Label label = new Label();
-            var name = GetPropValue(pc, $"Field{fieldIndex}");
-            label.Content = name;
+            string lableText = "";
+            if(pc != null)
+            {
+                var t = GetPropValue(pc, $"Field{fieldIndex}");
+                if (t != null) lableText = t.ToString();
+            }
+            else
+            {
+                lableText = field.Name;
+            }
+
+            label.Content = lableText;
             label.FontSize = field.Size;
+            label.Padding = new Thickness(0);
             canvas.Children.Add(label);
-            Canvas.SetTop(label, field.YCord * printResolution);
-            Canvas.SetLeft(label, field.XCord * printResolution);
+            var x = Utilities.MillimeterToPixel(field.XCord, viewSize);
+            var y = Utilities.MillimeterToPixel(field.YCord, viewSize);
+            Canvas.SetLeft(label, x);
+            Canvas.SetTop(label, y);
             fieldIndex++;
         }
 
