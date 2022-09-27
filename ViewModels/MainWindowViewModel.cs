@@ -51,9 +51,9 @@ public partial class MainWindowViewModel
     public ObservableCollection<PrintContent> printContentList;
     [ObservableProperty]
     public PrintContent selectedPrintContent;
-    partial void OnSelectedPrintContentChanging(PrintContent? layout)
+    partial void OnSelectedPrintContentChanged(PrintContent? layout)
     {
-      
+        SetViewContent();
     }
 
     [ObservableProperty]
@@ -73,11 +73,6 @@ public partial class MainWindowViewModel
     }
 
 
-    [RelayCommand]
-    private void SelectedItemChanged()
-    {
-        
-    }
     
     [RelayCommand]
     private void AddContent()
@@ -120,6 +115,12 @@ public partial class MainWindowViewModel
         }
         SetView(layout);
         SetNewPrintContent(layout);
+    }
+
+    private void SetViewContent()
+    {
+
+        View = GetCanvas(selectedPrintContent, selectedLayout);
     }
     private void ClearView()
     {
@@ -195,7 +196,7 @@ public partial class MainWindowViewModel
         canvas.Width = width;
         canvas.Height = height;
         canvas.Arrange(new Rect(new Size(width,height)));
-        canvas.Background = new SolidColorBrush(Colors.Beige);
+        //canvas.Background = new SolidColorBrush(Colors.Beige);
 
         int fieldIndex = 1;
         foreach (var field in layout.Fields)

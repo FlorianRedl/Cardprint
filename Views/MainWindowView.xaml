@@ -85,7 +85,8 @@
                       RowHeaderWidth="0"
                       SelectedValue="{Binding SelectedPrintContent}"
                       SelectionChanged="Datagrid_SelectionChanged"
-                      CanUserSortColumns="false">
+                      CanUserSortColumns="false"
+                      >
                       
                 </DataGrid>
             
@@ -98,7 +99,7 @@
         </Border>
        
         <!--View-->
-        <Border Grid.Row="2" Grid.RowSpan="2" Grid.Column="0" Margin="10" BorderBrush="#A2A2A2" BorderThickness="2" Background="Transparent" PreviewMouseWheel="Window_PreviewMouseWheel">
+        <Border Grid.Row="2" Grid.RowSpan="2" Grid.Column="0" Margin="10" BorderBrush="#A2A2A2" BorderThickness="2" Background="Transparent" >
             <ContentPresenter  Content="{Binding View}"/>
         </Border>
         <!--<Button Grid.Column="0" Grid.Row="2" Width="30" Height="30" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="20" Style="{StaticResource refreshButton}" Command="{Binding ResetViewCommand}">

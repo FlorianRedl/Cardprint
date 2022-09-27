@@ -24,17 +24,17 @@ public partial class MainWindowView : Window
     
     
 
-    private void Window_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
-    {
-        if (e.Delta < 0)
-        {
-            mainWindowViewModel.SelectedIndex++;
-        }
-        else
-        {
-            mainWindowViewModel.SelectedIndex--;
-        }
-    }
+    //private void Window_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+    //{
+    //    if (e.Delta < 0)
+    //    {
+    //        mainWindowViewModel.SelectedIndex++;
+    //    }
+    //    else
+    //    {
+    //        mainWindowViewModel.SelectedIndex--;
+    //    }
+    //}
 
     private void UpdateGrid(string[] headers)
     {
