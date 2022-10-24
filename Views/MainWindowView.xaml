@@ -11,6 +11,7 @@
         MinHeight="450"
         MinWidth="1000"
         WindowStartupLocation="CenterScreen"
+        FontSize="14"
         >
     <Window.Resources>
         <ResourceDictionary Source="../ResourceDictionarys/StyleDictionary.xaml"/>
@@ -86,6 +87,7 @@
                       SelectedValue="{Binding SelectedPrintContent}"
                       SelectionChanged="Datagrid_SelectionChanged"
                       CanUserSortColumns="false"
+                      FontSize="14"
                       >
                       
                 </DataGrid>

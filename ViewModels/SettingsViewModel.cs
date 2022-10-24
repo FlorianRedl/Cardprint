@@ -22,6 +22,8 @@ internal partial class SettingsViewModel
     public List<string> printers;
     [ObservableProperty]
     public string selectedPrinter;
+    [ObservableProperty]
+    public string layoutPath;
 
     public SettingsViewModel()
     {
@@ -31,6 +33,7 @@ internal partial class SettingsViewModel
         printResolution = Settings.Default.PrintResolution;
         SelectedPrinter = Settings.Default.SelectedPrinter;
         ViewSize = Settings.Default.ViewSize;
+        layoutPath = Settings.Default.LayoutPath;
     }
 
     
@@ -41,7 +44,7 @@ internal partial class SettingsViewModel
         Settings.Default.PrintResolution = PrintResolution;
         Settings.Default.ViewSize = ViewSize;
         Settings.Default.SelectedPrinter = SelectedPrinter;
-
+        Settings.Default.LayoutPath = layoutPath;
         Settings.Default.Save();
         var win = obj as SettingsView;
         win?.Close();

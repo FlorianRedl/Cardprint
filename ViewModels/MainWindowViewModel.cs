@@ -25,6 +25,7 @@ public partial class MainWindowViewModel
 {
     double viewSize { get { return Settings.Default.ViewSize; } } // 0.1 bis +2
     int printResolution { get { return Settings.Default.PrintResolution; } } // nötig ?
+    string layoutPath { get { return Settings.Default.LayoutPath; } } // nötig ?
 
     public Action<string[]> OnSelectedLayoutChanges;
 
@@ -66,7 +67,7 @@ public partial class MainWindowViewModel
     public MainWindowViewModel()
     {
         
-        Layouts = new ObservableCollection<LayoutModel>(XmlReader.GetLayouts());
+        Layouts = new ObservableCollection<LayoutModel>(XmlReader.GetLayouts(layoutPath));
         printContentHeaders = new List<string>();
         printContentList = new ObservableCollection<PrintContent>(DataAccess.GetPrintContentToLayout());
 

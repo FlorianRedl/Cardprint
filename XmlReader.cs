@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Xml;
 using Cardprint.Models;
 
@@ -11,18 +12,29 @@ namespace Cardprint;
 
 public static class XmlReader
 {
-    public static List<LayoutModel> GetLayouts()
+    public static List<LayoutModel> GetLayouts(string path)
     {
         List<LayoutModel> layouts = new List<LayoutModel>();
 
-        var files =  Directory.GetFiles(@"C:\temp\Layouts","*.xml");
-
-        foreach (var file in files)
+        try
         {
-            layouts.Add(GetLayoutFromXml(file));
+            var files = Directory.GetFiles(path, "*.xml");
+            foreach (var file in files)
+            {
+                layouts.Add(GetLayoutFromXml(file));
+            }
+
+            return layouts;
+
         }
+        catch (Exception ex)
+        {
+            MessageBox.Show(ex.Message);
+            return layouts;
+        }
+
+
         
-        return layouts;
         
     }
 

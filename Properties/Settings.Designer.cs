@@ -58,5 +58,17 @@ namespace Cardprint.Properties {
                 this["ViewSize"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\temp\\Layouts")]
+        public string LayoutPath {
+            get {
+                return ((string)(this["LayoutPath"]));
+            }
+            set {
+                this["LayoutPath"] = value;
+            }
+        }
     }
 }

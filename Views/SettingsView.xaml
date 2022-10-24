@@ -8,10 +8,10 @@
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance Type=vm:SettingsViewModel}"
         Title="SettingsView" 
-        Height="300"
-        MinHeight="300"
-        Width="800"
-        MinWidth="800"
+        Height="250"
+        MinHeight="250"
+        Width="450"
+        MinWidth="450"
         WindowStartupLocation="CenterScreen"
         x:Name="window"
        
@@ -19,12 +19,9 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
+
         </Grid.ColumnDefinitions>
 
-        <Canvas Grid.Row="0"  Grid.Column="0" Margin="10" Background="AliceBlue">
-            <Label Canvas.Top="5" Canvas.Left="0" Content="88888" Padding="0"/>
-        </Canvas>
         <!--<Border  ClipToBounds="True" BorderBrush="#A2A2A2" BorderThickness="2" Background="Transparent">
             <ContentPresenter />
         </Border>-->
@@ -32,11 +29,14 @@
         <DockPanel Grid.Row="0"  Grid.Column="1" Margin="10">
             <GroupBox DockPanel.Dock="Top" Header="General">
                 <StackPanel>
-                    
-                    <StackPanel Orientation="Horizontal">
+                    <DockPanel>
+                        <Label Content="Layout Path:" Width="100" HorizontalContentAlignment="Right" />
+                        <TextBox Text="{Binding LayoutPath}" Margin="2" HorizontalAlignment="Stretch"/>
+                    </DockPanel>
+                    <DockPanel>
                         <Label Content="Viewsize:" Width="100" HorizontalContentAlignment="Right" />
-                        <TextBox Text="{Binding ViewSize}" Margin="2" Width="50"/>
-                    </StackPanel>
+                        <TextBox Text="{Binding ViewSize}" Margin="2" Width="50" HorizontalAlignment="Left"/>
+                    </DockPanel>
                 </StackPanel>
             </GroupBox>
             <GroupBox DockPanel.Dock="Top" Header="Print">
