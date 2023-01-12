@@ -14,5 +14,11 @@
     <Setting Name="LayoutPath" Type="System.String" Scope="User">
       <Value Profile="(Default)">C:\temp\Layouts</Value>
     </Setting>
+    <Setting Name="PrinterOffsetX" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="PrinterOffsetY" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

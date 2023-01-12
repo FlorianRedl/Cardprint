@@ -9,7 +9,6 @@ namespace Cardprint.Models;
 public partial class LayoutModel : ObservableObject
 {
 
-    public int LayoutId { get; set; }
     public string LayoutName { get; set; }
     public string? BackgroundImg { get; set; }
     public string? Format { get; set; }
@@ -19,10 +18,12 @@ public partial class LayoutModel : ObservableObject
     public List<FieldModel> Fields { get; set; }
 
 
-    public bool IsError()
+    public bool IsValide(out string error)
     {
-        if (Format == null) return true;
-        return false;
+        error= string.Empty;
+        if (Format == null) { error = "missing Format"; return false; };
+        if (Fields.Count == 0) { error = "no fields"; return false; };
+        return true;
     }
 
     private (double width, double height) GetFormatSize()
@@ -36,20 +37,13 @@ public partial class LayoutModel : ObservableObject
         }
     }
 
-    public LayoutModel(int layoutId, string layoutName,string? backgroundImg,string? format, List<FieldModel> fields)
+    public LayoutModel(string layoutName,string? backgroundImg,string? format, List<FieldModel> fields)
     {
-        LayoutId = layoutId;
+
         LayoutName = layoutName;
         Fields = fields;
         BackgroundImg = backgroundImg;
         Format = format;
-    }
-
-
-
-    public LayoutModel()
-    {
-
     }
 
 

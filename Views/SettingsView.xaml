@@ -8,7 +8,7 @@
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance Type=vm:SettingsViewModel}"
         Title="SettingsView" 
-        Height="250"
+        Height="260"
         MinHeight="250"
         Width="450"
         MinWidth="450"
@@ -42,12 +42,18 @@
             <GroupBox DockPanel.Dock="Top" Header="Print">
                 <StackPanel>
                     <StackPanel Orientation="Horizontal">
+                        <Label  Content="Default Printer:" Width="100" HorizontalContentAlignment="Right"  />
+                        <ComboBox ItemsSource="{Binding Printers}" SelectedItem="{Binding SelectedPrinter}" Width="200" Margin="2"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
                         <Label  Content="Print Resolution:" Width="100" HorizontalContentAlignment="Right"  />
                         <TextBox  Text="{Binding PrintResolution}" Width="50" Margin="2"/>
                     </StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <Label  Content="Default Printer:" Width="100" HorizontalContentAlignment="Right"  />
-                        <ComboBox ItemsSource="{Binding Printers}" SelectedItem="{Binding SelectedPrinter}" Width="200" Margin="2"/>
+                    <StackPanel Orientation="Horizontal" IsEnabled="False">
+                        <Label  Content="Offset X:" Width="100" HorizontalContentAlignment="Right"  />
+                        <TextBox  Text="{Binding OffsetX}" Width="50" Margin="2"/>
+                        <Label  Content="Offset Y:"  HorizontalContentAlignment="Right"  />
+                        <TextBox  Text="{Binding OffsetY}" Width="50" Margin="2"/>
                     </StackPanel>
                 </StackPanel>
             </GroupBox>

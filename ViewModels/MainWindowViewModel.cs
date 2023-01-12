@@ -24,7 +24,7 @@ namespace Cardprint.ViewModels;
 public partial class MainWindowViewModel 
 {
     double viewSize { get { return Settings.Default.ViewSize; } } // 0.1 bis +2
-    int printResolution { get { return Settings.Default.PrintResolution; } } // nötig ?
+    // int printResolution { get { return Settings.Default.PrintResolution; } } // nötig ?
     string layoutPath { get { return Settings.Default.LayoutPath; } } // nötig ?
 
     public Action<string[]> OnSelectedLayoutChanges;
@@ -73,8 +73,9 @@ public partial class MainWindowViewModel
 
     }
 
-
-    
+    /// <summary>
+    /// ------ BUTTONS ------
+    /// </summary>
     [RelayCommand]
     private void AddContent()
     {
@@ -97,6 +98,23 @@ public partial class MainWindowViewModel
     }
 
 
+    /// <summary>
+    /// ------ VIEW ------
+    /// </summary>
+    private void LoadView(LayoutModel layout)
+    {
+        if (layout == null) return;
+        string error;
+        if (!layout.IsValide(out error))
+        {
+            ClearView();
+            ClearPrintContent();
+            MessageBox.Show("incorrect layout!" + "\n \n" + $"{error}","error",MessageBoxButton.OK, MessageBoxImage.Warning);
+            return;
+        }
+        SetView(layout);
+        SetNewPrintContent(layout);
+    }
     private void SetView(LayoutModel layout)
     {
 
@@ -104,20 +122,6 @@ public partial class MainWindowViewModel
         View = GetCanvas(null, layout);
 
     }
-
-    private void LoadView(LayoutModel layout)
-    {
-        if (layout == null) return;
-        if (layout.IsError())
-        {
-            ClearView();
-            MessageBox.Show("Layout fehlerhaft!");
-            return;
-        }
-        SetView(layout);
-        SetNewPrintContent(layout);
-    }
-
     private void SetViewContent()
     {
 
@@ -127,8 +131,12 @@ public partial class MainWindowViewModel
     {
         View = null;
         ViewBackground = null;
+        
     }
 
+    /// <summary>
+    /// ------ PrintContent ------
+    /// </summary>
     private void SetNewPrintContent(LayoutModel layout)
     {
         PrintContentList.Clear();
@@ -136,6 +144,12 @@ public partial class MainWindowViewModel
         OnSelectedLayoutChanges?.Invoke(printContentHeaders.ToArray());
         PrintContentList.Add(new PrintContent());
     }
+    private void ClearPrintContent()
+    {
+        PrintContentList.Clear();
+        OnSelectedLayoutChanges?.Invoke(null);
+    }
+
 
     private Canvas GetViewBackground(LayoutModel layout)
     {
@@ -167,7 +181,9 @@ public partial class MainWindowViewModel
     }
 
 
-    //----- Printing -----
+    /// <summary>
+    /// ------ Printing ------
+    /// </summary>
     [RelayCommand]
     private void Print()
     {

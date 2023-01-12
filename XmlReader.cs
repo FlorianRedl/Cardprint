@@ -33,12 +33,7 @@ public static class XmlReader
             return layouts;
         }
 
-
-        
-        
     }
-
-
 
 
     private static  LayoutModel GetLayoutFromXml(string filePath)
@@ -47,7 +42,7 @@ public static class XmlReader
         doc.Load(filePath);
         var layoutName = Path.GetFileNameWithoutExtension(filePath);
         var backgroundImg = doc.GetElementsByTagName("backgroundImg").Item(0)?.InnerText;
-        var format = doc.GetElementsByTagName("Format").Item(0)?.InnerText;
+        var format = doc.GetElementsByTagName("format").Item(0)?.InnerText;
         var fields = doc.GetElementsByTagName("field");
         List<FieldModel> fieldsList = new List<FieldModel>();
         foreach (XmlNode field in fields)
@@ -73,6 +68,6 @@ public static class XmlReader
             }
             fieldsList.Add(fieldModel);
         }
-        return new LayoutModel(0, layoutName, backgroundImg, format, fieldsList);
+        return new LayoutModel(layoutName, backgroundImg, format, fieldsList);
     }
 }

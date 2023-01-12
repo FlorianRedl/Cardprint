@@ -24,6 +24,10 @@ internal partial class SettingsViewModel
     public string selectedPrinter;
     [ObservableProperty]
     public string layoutPath;
+    [ObservableProperty]
+    public double offsetX;
+    [ObservableProperty]
+    public double offsetY;
 
     public SettingsViewModel()
     {
@@ -34,9 +38,9 @@ internal partial class SettingsViewModel
         SelectedPrinter = Settings.Default.SelectedPrinter;
         ViewSize = Settings.Default.ViewSize;
         layoutPath = Settings.Default.LayoutPath;
+        OffsetX = Settings.Default.PrinterOffsetX; 
+        offsetY = Settings.Default.PrinterOffsetY;
     }
-
-    
 
     [RelayCommand]
     private void Save(object obj)
@@ -45,6 +49,8 @@ internal partial class SettingsViewModel
         Settings.Default.ViewSize = ViewSize;
         Settings.Default.SelectedPrinter = SelectedPrinter;
         Settings.Default.LayoutPath = layoutPath;
+        Settings.Default.PrinterOffsetX = offsetX;
+        Settings.Default.PrinterOffsetY = offsetY;
         Settings.Default.Save();
         var win = obj as SettingsView;
         win?.Close();

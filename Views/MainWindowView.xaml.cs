@@ -38,7 +38,9 @@ public partial class MainWindowView : Window
 
     private void UpdateGrid(string[] headers)
     {
+
         DatagridPrintContent.Columns.Clear();
+        if(headers == null|| headers.Length == 0 ) return ;
         for (int i = 0; i < headers.Length; i++)
         {
             DataGridTextColumn c = new DataGridTextColumn();
