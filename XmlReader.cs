@@ -36,6 +36,28 @@ public static class XmlReader
     }
 
 
+    public static List<string> GetLayoutNames(string path)
+    {
+        var layoutNames = new List<string>();
+
+        try
+        {
+            var files = Directory.GetFiles(path, "*.xml");
+            foreach (var file in files)
+            {
+                layoutNames.Add(Path.GetFileNameWithoutExtension(file));
+            }
+            return layoutNames;
+
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(ex.Message);
+            return layoutNames;
+        }
+    }
+
+
     private static  LayoutModel GetLayoutFromXml(string filePath)
     {
         XmlDocument doc = new XmlDocument();

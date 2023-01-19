@@ -29,8 +29,10 @@
         </Grid.ColumnDefinitions>
         <Menu Grid.Row="0" Grid.ColumnSpan="2">
             <MenuItem Header="Data">
-                <MenuItem Header="Einstellungen" Command="{Binding OpenSettingsCommand}"></MenuItem>
+                <MenuItem Header="Settings" Command="{Binding OpenSettingsCommand}"></MenuItem>
+                <MenuItem Header="Open Layouts" Command="{Binding OpenLayoutFolderCommand}"></MenuItem>
             </MenuItem>
+            
             <MenuItem Header="Help">
                 <MenuItem Header="About CardPrint" ></MenuItem>
             </MenuItem>
@@ -38,12 +40,8 @@
         <StackPanel Grid.Row="1" VerticalAlignment="Bottom" Margin="10,0,10,0">
             <DockPanel >
                 <TextBlock Text="Layout: " Margin="0,0,5,0"></TextBlock>
-                <ComboBox ItemsSource="{Binding Layouts}" SelectedItem="{Binding SelectedLayout}" >
-                    <ComboBox.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding LayoutName}" />
-                        </DataTemplate>
-                    </ComboBox.ItemTemplate>
+                <ComboBox ItemsSource="{Binding LayoutNames}" SelectedItem="{Binding SelectedLayout}" >
+  
                 </ComboBox>
                 
             </DockPanel>
@@ -61,7 +59,7 @@
             </Grid.ColumnDefinitions>
             
             <DockPanel Grid.Row="0" Grid.Column="0" Margin="0,25,0,0" >
-                <Button DockPanel.Dock="Top" Margin="3,0,3,0" Command="{Binding AddContentCommand}" Style="{StaticResource RoundCorner}" Background="#4799EB">
+                <Button DockPanel.Dock="Top" Margin="3,0,3,0" Command="{Binding LoadFromFileCommand}" Style="{StaticResource RoundCorner}" Background="#4799EB">
                     <Image Style="{StaticResource imgImport}"/>
                 </Button>
                 <Button DockPanel.Dock="Top" Margin="3,0,3,0" Command="{Binding AddContentCommand}" Style="{StaticResource RoundCorner}" Background="#4799EB">

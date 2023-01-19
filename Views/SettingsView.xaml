@@ -9,12 +9,11 @@
         d:DataContext="{d:DesignInstance Type=vm:SettingsViewModel}"
         Title="SettingsView" 
         Height="260"
-        MinHeight="250"
+        MinHeight="260"
         Width="450"
         MinWidth="450"
         WindowStartupLocation="CenterScreen"
         x:Name="window"
-       
         >
     <Grid>
         <Grid.ColumnDefinitions>
@@ -41,20 +40,20 @@
             </GroupBox>
             <GroupBox DockPanel.Dock="Top" Header="Print">
                 <StackPanel>
-                    <StackPanel Orientation="Horizontal">
+                    <DockPanel>
                         <Label  Content="Default Printer:" Width="100" HorizontalContentAlignment="Right"  />
-                        <ComboBox ItemsSource="{Binding Printers}" SelectedItem="{Binding SelectedPrinter}" Width="200" Margin="2"/>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal">
+                        <ComboBox ItemsSource="{Binding Printers}" SelectedItem="{Binding SelectedPrinter}" HorizontalAlignment="Stretch" Margin="2"/>
+                    </DockPanel>
+                    <DockPanel >
                         <Label  Content="Print Resolution:" Width="100" HorizontalContentAlignment="Right"  />
-                        <TextBox  Text="{Binding PrintResolution}" Width="50" Margin="2"/>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal" IsEnabled="False">
+                        <TextBox  Text="{Binding PrintResolution}" Width="50" Margin="2" HorizontalAlignment="Left"/>
+                    </DockPanel>
+                    <DockPanel IsEnabled="False">
                         <Label  Content="Offset X:" Width="100" HorizontalContentAlignment="Right"  />
-                        <TextBox  Text="{Binding OffsetX}" Width="50" Margin="2"/>
-                        <Label  Content="Offset Y:"  HorizontalContentAlignment="Right"  />
-                        <TextBox  Text="{Binding OffsetY}" Width="50" Margin="2"/>
-                    </StackPanel>
+                        <TextBox  Text="{Binding OffsetX}" Width="50" Margin="2" />
+                        <Label  Content="Offset Y:"   />
+                        <TextBox  Text="{Binding OffsetY}" Width="50" Margin="2" HorizontalAlignment="Left"/>
+                    </DockPanel>
                 </StackPanel>
             </GroupBox>
             <StackPanel DockPanel.Dock="Bottom" VerticalAlignment="Bottom">

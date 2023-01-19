@@ -14,8 +14,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Linq;
 using Cardprint.Properties;
-
-
+using System.Diagnostics;
 
 namespace Cardprint.ViewModels;
 
@@ -23,6 +22,7 @@ namespace Cardprint.ViewModels;
 [ObservableObject]
 public partial class MainWindowViewModel 
 {
+    //Settings
     double viewSize { get { return Settings.Default.ViewSize; } } // 0.1 bis +2
     // int printResolution { get { return Settings.Default.PrintResolution; } } // nötig ?
     string layoutPath { get { return Settings.Default.LayoutPath; } } // nötig ?
@@ -33,12 +33,14 @@ public partial class MainWindowViewModel
 
     //Layouts
     [ObservableProperty]
-    public ObservableCollection<LayoutModel> layouts;
+    public ObservableCollection<string> layoutNames;
     [ObservableProperty]
-    public LayoutModel selectedLayout;
-    partial void OnSelectedLayoutChanging(LayoutModel? layout)
+    public string selectedLayout;
+    [ObservableProperty]
+    public ObservableCollection<LayoutModel> layouts;
+    partial void OnSelectedLayoutChanging(string? layoutName)
     {
-        LoadView(layout);
+        //LoadView(layout);
     }
 
     // PrintContent
@@ -66,8 +68,9 @@ public partial class MainWindowViewModel
     
     public MainWindowViewModel()
     {
-        
-        Layouts = new ObservableCollection<LayoutModel>(XmlReader.GetLayouts(layoutPath));
+
+        layoutNames = new ObservableCollection<string>(XmlReader.GetLayoutNames(layoutPath));
+        //Layouts = new ObservableCollection<LayoutModel>(XmlReader.GetLayouts(layoutPath));
         printContentHeaders = new List<string>();
         printContentList = new ObservableCollection<PrintContent>(DataAccess.GetPrintContentToLayout());
 
@@ -76,6 +79,12 @@ public partial class MainWindowViewModel
     /// <summary>
     /// ------ BUTTONS ------
     /// </summary>
+    /// 
+    [RelayCommand]
+    private void LoadFromFile()
+    {
+       
+    }
     [RelayCommand]
     private void AddContent()
     {
@@ -96,7 +105,12 @@ public partial class MainWindowViewModel
         var win = new SettingsView();
         win.Show();
     }
+    [RelayCommand]
+    private void OpenLayoutFolder()
+    {
 
+        Process.Start("explorer.exe",layoutPath);
+    }
 
     /// <summary>
     /// ------ VIEW ------
@@ -125,7 +139,7 @@ public partial class MainWindowViewModel
     private void SetViewContent()
     {
 
-        View = GetCanvas(selectedPrintContent, selectedLayout);
+        //View = GetCanvas(selectedPrintContent, selectedLayout);
     }
     private void ClearView()
     {
@@ -197,8 +211,8 @@ public partial class MainWindowViewModel
 
             //PageMediaSize pageSize = new PageMediaSize(PageMediaSizeName.CreditCard);
             //pd.PrintTicket.PageMediaSize = pageSize;
-            var pv = GetCanvas(SelectedPrintContent ,SelectedLayout);
-            pd.PrintVisual(pv, "printing Card");
+            //var pv = GetCanvas(SelectedPrintContent ,SelectedLayout);
+            //pd.PrintVisual(pv, "printing Card");
         }
 
 
