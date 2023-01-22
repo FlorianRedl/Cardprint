@@ -37,13 +37,13 @@ namespace Cardprint.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("8")]
-        public int PrintResolution {
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public double PrintScale {
             get {
-                return ((int)(this["PrintResolution"]));
+                return ((double)(this["PrintScale"]));
             }
             set {
-                this["PrintResolution"] = value;
+                this["PrintScale"] = value;
             }
         }
         
@@ -61,7 +61,7 @@ namespace Cardprint.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\temp\\Layouts")]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Program Files (x86)\\Cardprint\\Layouts")]
         public string LayoutPath {
             get {
                 return ((string)(this["LayoutPath"]));

@@ -8,8 +8,8 @@
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance Type=vm:SettingsViewModel}"
         Title="SettingsView" 
-        Height="260"
-        MinHeight="260"
+        Height="290"
+        MinHeight="290"
         Width="450"
         MinWidth="450"
         WindowStartupLocation="CenterScreen"
@@ -28,9 +28,10 @@
         <DockPanel Grid.Row="0"  Grid.Column="1" Margin="10">
             <GroupBox DockPanel.Dock="Top" Header="General">
                 <StackPanel>
-                    <DockPanel>
-                        <Label Content="Layout Path:" Width="100" HorizontalContentAlignment="Right" />
-                        <TextBox Text="{Binding LayoutPath}" Margin="2" HorizontalAlignment="Stretch"/>
+                    <DockPanel LastChildFill="True" >
+                        <Label DockPanel.Dock="Left" Content="Layout Path:" Width="100" HorizontalContentAlignment="Right" />
+                        <Button DockPanel.Dock="Right" Content="File" Command="{Binding PickFileCommand}" Width="60" Height="22" />
+                        <TextBox Text="{Binding LayoutPath}" IsEnabled="False" Margin="2" HorizontalAlignment="Stretch"  />
                     </DockPanel>
                     <DockPanel>
                         <Label Content="Viewsize:" Width="100" HorizontalContentAlignment="Right" />
@@ -42,23 +43,35 @@
                 <StackPanel>
                     <DockPanel>
                         <Label  Content="Default Printer:" Width="100" HorizontalContentAlignment="Right"  />
-                        <ComboBox ItemsSource="{Binding Printers}" SelectedItem="{Binding SelectedPrinter}" HorizontalAlignment="Stretch" Margin="2"/>
+                        <ComboBox ItemsSource="{Binding Printers}" SelectedItem="{Binding SelectedPrinter}" HorizontalAlignment="Stretch" Margin="2">
+                            
+                        </ComboBox>
                     </DockPanel>
                     <DockPanel >
-                        <Label  Content="Print Resolution:" Width="100" HorizontalContentAlignment="Right"  />
-                        <TextBox  Text="{Binding PrintResolution}" Width="50" Margin="2" HorizontalAlignment="Left"/>
+                        <Label  Content="Testformat:" Width="100" HorizontalContentAlignment="Right" />
+                        <ComboBox ItemsSource="{Binding Formats}" SelectedItem="{Binding SelectedFormat}" HorizontalAlignment="Left" MinWidth="150" Margin="2">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding NameLong}" />
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
                     </DockPanel>
-                    <DockPanel IsEnabled="False">
+                    <DockPanel IsEnabled="true">
                         <Label  Content="Offset X:" Width="100" HorizontalContentAlignment="Right"  />
-                        <TextBox  Text="{Binding OffsetX}" Width="50" Margin="2" />
-                        <Label  Content="Offset Y:"   />
-                        <TextBox  Text="{Binding OffsetY}" Width="50" Margin="2" HorizontalAlignment="Left"/>
+                        <TextBox  Text="{Binding OffsetX}" Width="40" Margin="2" />
+                        <Label  Content="Offset Y:"/>
+                        <TextBox  Text="{Binding OffsetY}" Width="40" Margin="2" HorizontalAlignment="Left"/>
+                        <Label  Content="Scale:" Width="50"  />
+                        <TextBox  Text="{Binding PrintScale}" Width="40" Margin="2" HorizontalAlignment="Left"/>
+                        <Button Content="Testprint" Command="{Binding TestPrintCommand}"  Width="60" Height="22" HorizontalAlignment="Right" DockPanel.Dock="Right" />
                     </DockPanel>
                 </StackPanel>
             </GroupBox>
-            <StackPanel DockPanel.Dock="Bottom" VerticalAlignment="Bottom">
-                <Button Content="Save" Command="{Binding SaveCommand}" CommandParameter="{Binding ElementName=window}" Width="80" VerticalAlignment="Bottom" HorizontalAlignment="Right" />
-            </StackPanel>
+            <DockPanel DockPanel.Dock="Bottom" VerticalAlignment="Bottom">
+                <Label  Content="{Binding PrinterStatus}"  Margin="2" HorizontalAlignment="Left"></Label>
+                <Button DockPanel.Dock="Right" Content="Save" Command="{Binding SaveCommand}" CommandParameter="{Binding ElementName=window}" Width="80" Height="22"  HorizontalAlignment="Right"  />
+            </DockPanel>
         </DockPanel>
 
     </Grid>

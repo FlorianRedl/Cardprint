@@ -40,7 +40,7 @@
         <StackPanel Grid.Row="1" VerticalAlignment="Bottom" Margin="10,0,10,0">
             <DockPanel >
                 <TextBlock Text="Layout: " Margin="0,0,5,0"></TextBlock>
-                <ComboBox ItemsSource="{Binding LayoutNames}" SelectedItem="{Binding SelectedLayout}" >
+                <ComboBox ItemsSource="{Binding LayoutNames}" SelectedItem="{Binding SelectedLayoutName}" >
   
                 </ComboBox>
                 

@@ -6,12 +6,11 @@ using System.Text;
 using System.Threading.Tasks;
 using Cardprint.Models;
 
-namespace Cardprint;
+namespace Cardprint.Utilities;
 
 
-public static class Utilities
+public static class Calc
 {
-
 
     public static int MillimeterToPixel(double millimeter, double factor)
     {

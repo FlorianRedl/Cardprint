@@ -15,6 +15,8 @@ using CommunityToolkit.Mvvm.Input;
 using System.Linq;
 using Cardprint.Properties;
 using System.Diagnostics;
+using System.IO;
+using Cardprint.Utilities;
 
 namespace Cardprint.ViewModels;
 
@@ -23,9 +25,9 @@ namespace Cardprint.ViewModels;
 public partial class MainWindowViewModel 
 {
     //Settings
-    double viewSize { get { return Settings.Default.ViewSize; } } // 0.1 bis +2
+    double ViewSize { get { return Settings.Default.ViewSize; } } // 0.1 bis +2
     // int printResolution { get { return Settings.Default.PrintResolution; } } // nötig ?
-    string layoutPath { get { return Settings.Default.LayoutPath; } } // nötig ?
+    string LayoutPath { get { return Settings.Default.LayoutPath; } } // nötig ?
 
     public Action<string[]> OnSelectedLayoutChanges;
 
@@ -35,12 +37,14 @@ public partial class MainWindowViewModel
     [ObservableProperty]
     public ObservableCollection<string> layoutNames;
     [ObservableProperty]
-    public string selectedLayout;
+    public string selectedLayoutName;
+    [ObservableProperty]
+    public LayoutModel selectedLayout;
     [ObservableProperty]
     public ObservableCollection<LayoutModel> layouts;
-    partial void OnSelectedLayoutChanging(string? layoutName)
+    partial void OnSelectedLayoutNameChanging(string? value)
     {
-        //LoadView(layout);
+        LoadLayout(value);
     }
 
     // PrintContent
@@ -54,23 +58,28 @@ public partial class MainWindowViewModel
     public ObservableCollection<PrintContent> printContentList;
     [ObservableProperty]
     public PrintContent selectedPrintContent;
-    partial void OnSelectedPrintContentChanged(PrintContent? layout)
+    partial void OnSelectedPrintContentChanged(PrintContent? value)
     {
         SetViewContent();
     }
 
     [ObservableProperty]
     public Canvas view;
-
     [ObservableProperty]
     public Canvas viewBackground;
 
     
     public MainWindowViewModel()
     {
-
-        layoutNames = new ObservableCollection<string>(XmlReader.GetLayoutNames(layoutPath));
-        //Layouts = new ObservableCollection<LayoutModel>(XmlReader.GetLayouts(layoutPath));
+        if (Directory.Exists(LayoutPath))
+        {
+            LayoutNames = new ObservableCollection<string>(XmlReader.GetLayoutNames(LayoutPath));
+        }
+        else
+        {
+            MessageBox.Show("Layout Folder missing!" + "\n \n" + $"Path: {LayoutPath}", "error", MessageBoxButton.OK, MessageBoxImage.Warning);
+        }
+        
         printContentHeaders = new List<string>();
         printContentList = new ObservableCollection<PrintContent>(DataAccess.GetPrintContentToLayout());
 
@@ -83,11 +92,12 @@ public partial class MainWindowViewModel
     [RelayCommand]
     private void LoadFromFile()
     {
-       
+        MessageBox.Show("[LoadFromFile] not implemented");
     }
     [RelayCommand]
     private void AddContent()
     {
+        if (string.IsNullOrEmpty(SelectedLayoutName)) return;
         PrintContentList.Add(new PrintContent());
     }
     [RelayCommand]
@@ -109,8 +119,29 @@ public partial class MainWindowViewModel
     private void OpenLayoutFolder()
     {
 
-        Process.Start("explorer.exe",layoutPath);
+        Process.Start("explorer.exe",LayoutPath);
     }
+
+    private void LoadLayout(string layoutName)
+    {
+        if (string.IsNullOrEmpty(layoutName)) return;
+
+     
+        SelectedLayout = XmlReader.GetLayout(LayoutPath, layoutName);
+        string error;
+        if (!SelectedLayout.IsValide(out error))
+        {
+            ClearView();
+            ClearPrintContent();
+            MessageBox.Show("incorrect layout!" + "\n \n" + $"{error}", "error", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return;
+        }
+        SetView(SelectedLayout);
+        SetNewPrintContent(SelectedLayout);
+
+
+    }
+
 
     /// <summary>
     /// ------ VIEW ------
@@ -170,8 +201,8 @@ public partial class MainWindowViewModel
         Canvas canvas = new();
 
 
-        var width = Utilities.MillimeterToPixel(layout.FormatSize.height, viewSize) ;
-        var height = Utilities.MillimeterToPixel(layout.FormatSize.width, viewSize) ;
+        var width = Calc.MillimeterToPixel(layout.FormatSize.height, ViewSize) ;
+        var height = Calc.MillimeterToPixel(layout.FormatSize.width, ViewSize) ;
         canvas.Width = width;
         canvas.Height = height;
 
@@ -201,20 +232,19 @@ public partial class MainWindowViewModel
     [RelayCommand]
     private void Print()
     {
+        PrintHelper.Print();
 
         PrintDialog pd = new PrintDialog();
         PrintQueue queue = new LocalPrintServer().GetPrintQueue(Settings.Default.SelectedPrinter);
         pd.PrintQueue = queue;
+        PageMediaSize pSize = new PageMediaSize(PageMediaSizeName.CreditCard);
+        pd.PrintTicket.PageMediaSize = pSize;
 
-        if(pd.ShowDialog() == true)
-        {
-
-            //PageMediaSize pageSize = new PageMediaSize(PageMediaSizeName.CreditCard);
-            //pd.PrintTicket.PageMediaSize = pageSize;
-            //var pv = GetCanvas(SelectedPrintContent ,SelectedLayout);
-            //pd.PrintVisual(pv, "printing Card");
-        }
-
+        //Size pageSize = new Size(pd.PrintableAreaWidth, pd.PrintableAreaHeight);
+        //pCanvas.Measure(pageSize);
+        //pCanvas.Arrange(new Rect(5, 5, pageSize.Width, pageSize.Height));
+        var pCanvas = GetCanvas(SelectedPrintContent, SelectedLayout);
+        pd.PrintVisual(pCanvas, "printing Card");
 
     }
 
@@ -222,8 +252,8 @@ public partial class MainWindowViewModel
     {
 
         var canvas = new Canvas();
-        var width = Utilities.MillimeterToPixel(layout.FormatSize.height, viewSize);
-        var height = Utilities.MillimeterToPixel(layout.FormatSize.width, viewSize);
+        var width = Calc.MillimeterToPixel(layout.FormatSize.height, ViewSize);
+        var height = Calc.MillimeterToPixel(layout.FormatSize.width, ViewSize);
         canvas.Width = width;
         canvas.Height = height;
         canvas.Arrange(new Rect(new Size(width,height)));
@@ -249,8 +279,8 @@ public partial class MainWindowViewModel
             label.FontSize = field.Size;
             label.Padding = new Thickness(0);
             canvas.Children.Add(label);
-            var x = Utilities.MillimeterToPixel(field.XCord, viewSize);
-            var y = Utilities.MillimeterToPixel(field.YCord, viewSize);
+            var x = Calc.MillimeterToPixel(field.XCord, ViewSize);
+            var y = Calc.MillimeterToPixel(field.YCord, ViewSize);
             Canvas.SetLeft(label, x);
             Canvas.SetTop(label, y);
             fieldIndex++;

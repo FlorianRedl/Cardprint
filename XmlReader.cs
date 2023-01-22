@@ -8,33 +8,11 @@ using System.Windows;
 using System.Xml;
 using Cardprint.Models;
 
+
 namespace Cardprint;
 
 public static class XmlReader
 {
-    public static List<LayoutModel> GetLayouts(string path)
-    {
-        List<LayoutModel> layouts = new List<LayoutModel>();
-
-        try
-        {
-            var files = Directory.GetFiles(path, "*.xml");
-            foreach (var file in files)
-            {
-                layouts.Add(GetLayoutFromXml(file));
-            }
-
-            return layouts;
-
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show(ex.Message);
-            return layouts;
-        }
-
-    }
-
 
     public static List<string> GetLayoutNames(string path)
     {
@@ -56,13 +34,35 @@ public static class XmlReader
             return layoutNames;
         }
     }
+    //public static List<LayoutModel> GetLayouts(string path)
+    //{
+    //    List<LayoutModel> layouts = new List<LayoutModel>();
+
+    //    try
+    //    {
+    //        var files = Directory.GetFiles(path, "*.xml");
+    //        foreach (var file in files)
+    //        {
+    //            layouts.Add(GetLayoutFromXml(file));
+    //        }
+
+    //        return layouts;
+
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        MessageBox.Show(ex.Message);
+    //        return layouts;
+    //    }
+
+    //}
 
 
-    private static  LayoutModel GetLayoutFromXml(string filePath)
+
+    public static LayoutModel GetLayout(string filePath,string layoutName)
     {
         XmlDocument doc = new XmlDocument();
-        doc.Load(filePath);
-        var layoutName = Path.GetFileNameWithoutExtension(filePath);
+        doc.Load(filePath+"\\"+layoutName+".xml");
         var backgroundImg = doc.GetElementsByTagName("backgroundImg").Item(0)?.InnerText;
         var format = doc.GetElementsByTagName("format").Item(0)?.InnerText;
         var fields = doc.GetElementsByTagName("field");
