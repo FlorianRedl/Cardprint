@@ -147,7 +147,6 @@ public partial class MainWindowViewModel
         SetView(SelectedLayout);
         SetNewPrintContent(SelectedLayout);
 
-
     }
 
 
@@ -175,11 +174,7 @@ public partial class MainWindowViewModel
         View = GetCanvas(null, layout);
 
     }
-    private void SetViewContent()
-    {
-
-        //View = GetCanvas(selectedPrintContent, selectedLayout);
-    }
+    
     private void ClearView()
     {
         View = null;
@@ -208,7 +203,6 @@ public partial class MainWindowViewModel
     {
         Canvas canvas = new();
 
-
         var width = Calc.MillimeterToPixel(layout.FormatSize.height, ViewSize) ;
         var height = Calc.MillimeterToPixel(layout.FormatSize.width, ViewSize) ;
         canvas.Width = width;
@@ -221,13 +215,12 @@ public partial class MainWindowViewModel
         border.Width = width;
         border.Height = height;
 
-
-        if (layout.BackgroundImg != null)
-        {
-            Image img = new Image();
-            img.Source = new BitmapImage(new Uri(layout.BackgroundImg));
-            border.Child = img;
-        }
+        //if (layout.BackgroundImg != null)
+        //{
+        //    Image img = new Image();
+        //    img.Source = new BitmapImage(new Uri(layout.BackgroundImg));
+        //    border.Child = img;
+        //}
         canvas.Children.Add(border);
         return canvas;
 
@@ -242,7 +235,6 @@ public partial class MainWindowViewModel
     {
         PrintHelper.Print();
 
-        
     }
 
     private Canvas GetCanvas(PrintContent? pc, LayoutModel layout)
