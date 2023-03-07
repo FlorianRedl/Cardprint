@@ -48,10 +48,10 @@ public partial class MainWindowViewModel
     }
 
     // PrintContent
-    [ObservableProperty]
-    public float selectedIndex = 1;
-    [ObservableProperty]
-    public List<PrintContent> selectedPrintContents;
+    //[ObservableProperty]
+    //public float selectedIndex = 1;
+    //[ObservableProperty]
+    //public List<PrintContent> selectedPrintContents;
     [ObservableProperty]
     public List<string> printContentHeaders;
     [ObservableProperty]
@@ -60,7 +60,7 @@ public partial class MainWindowViewModel
     public PrintContent selectedPrintContent;
     partial void OnSelectedPrintContentChanged(PrintContent? value)
     {
-        SetViewContent();
+        //SetViewContent();
     }
 
     [ObservableProperty]
@@ -81,7 +81,7 @@ public partial class MainWindowViewModel
         }
         
         printContentHeaders = new List<string>();
-        printContentList = new ObservableCollection<PrintContent>(DataAccess.GetPrintContentToLayout());
+        printContentList = new ObservableCollection<PrintContent>();
 
     }
 
@@ -92,21 +92,29 @@ public partial class MainWindowViewModel
     [RelayCommand]
     private void LoadFromFile()
     {
-        MessageBox.Show("[LoadFromFile] not implemented");
+        MessageBox.Show("[LoadFromFile] not implemented yet");
     }
     [RelayCommand]
     private void AddContent()
     {
-        if (string.IsNullOrEmpty(SelectedLayoutName)) return;
+        if (selectedLayout == null) return;
         PrintContentList.Add(new PrintContent());
     }
     [RelayCommand]
     private void RemoveContent()
     {
         if (PrintContentList.Count <=1) return;
-        SelectedPrintContent = null;
-        var item = PrintContentList.LastOrDefault();
-        if (item != null) PrintContentList.Remove(item);
+
+        if(SelectedPrintContent != null)
+        {
+            PrintContentList.Remove(SelectedPrintContent);
+            return;
+        }
+        else
+        {
+            var item = PrintContentList.LastOrDefault();
+            if (item != null) PrintContentList.Remove(item);
+        }
 
     }
     [RelayCommand]
@@ -234,18 +242,7 @@ public partial class MainWindowViewModel
     {
         PrintHelper.Print();
 
-        PrintDialog pd = new PrintDialog();
-        PrintQueue queue = new LocalPrintServer().GetPrintQueue(Settings.Default.SelectedPrinter);
-        pd.PrintQueue = queue;
-        PageMediaSize pSize = new PageMediaSize(PageMediaSizeName.CreditCard);
-        pd.PrintTicket.PageMediaSize = pSize;
-
-        //Size pageSize = new Size(pd.PrintableAreaWidth, pd.PrintableAreaHeight);
-        //pCanvas.Measure(pageSize);
-        //pCanvas.Arrange(new Rect(5, 5, pageSize.Width, pageSize.Height));
-        var pCanvas = GetCanvas(SelectedPrintContent, SelectedLayout);
-        pd.PrintVisual(pCanvas, "printing Card");
-
+        
     }
 
     private Canvas GetCanvas(PrintContent? pc, LayoutModel layout)

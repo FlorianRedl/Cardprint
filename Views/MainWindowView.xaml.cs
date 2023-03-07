@@ -56,6 +56,6 @@ public partial class MainWindowView : Window
     private void Datagrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         var items = DatagridPrintContent.SelectedItems.Cast<PrintContent>().ToList();
-        mainWindowViewModel.SelectedPrintContents = items;
+       // mainWindowViewModel.SelectedPrintContents = items;
     }
 }
