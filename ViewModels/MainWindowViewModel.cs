@@ -20,6 +20,7 @@ using Cardprint.Utilities;
 using System.Collections;
 using System.Xml;
 using System.Security.Policy;
+using System.Text.RegularExpressions;
 
 namespace Cardprint.ViewModels;
 
@@ -147,7 +148,6 @@ public partial class MainWindowViewModel
     {
         if (string.IsNullOrEmpty(layoutName)) return;
 
-     
         SelectedLayout = XmlReader.GetLayout(LayoutPath, layoutName);
         string error;
         if (!SelectedLayout.IsValide(out error))
@@ -201,7 +201,7 @@ public partial class MainWindowViewModel
     private void SetNewPrintContent(LayoutModel layout)
     {
         PrintContentList.Clear();
-        printContentHeaders = layout.Fields.Select(s => s.Name).ToList();
+        printContentHeaders = layout.Fields.Where(s=> string.IsNullOrEmpty(s.Value)).Select(s => s.Name).ToList();
         OnSelectedLayoutChanges?.Invoke(printContentHeaders.ToArray());
         PrintContentList.Add(new PrintContent());
     }
@@ -228,12 +228,6 @@ public partial class MainWindowViewModel
         border.Width = width;
         border.Height = height;
 
-        //if (layout.BackgroundImg != null)
-        //{
-        //    Image img = new Image();
-        //    img.Source = new BitmapImage(new Uri(layout.BackgroundImg));
-        //    border.Child = img;
-        //}
         canvas.Children.Add(border);
         return canvas;
 
@@ -250,7 +244,7 @@ public partial class MainWindowViewModel
 
     }
 
-    private Canvas GetCanvas(PrintContent? pc, LayoutModel layout)
+    private Canvas GetCanvas(PrintContent? printContent, LayoutModel layout)
     {
 
         var canvas = new Canvas();
@@ -264,18 +258,14 @@ public partial class MainWindowViewModel
         int fieldIndex = 1;
         foreach (var field in layout.Fields)
         {
-
             Label label = new Label();
-            string lableText = "";
-            if(pc != null)
-            {
-                var t = GetPropValue(pc, $"Field{fieldIndex}");
-                if (t != null) lableText = t.ToString();
-            }
-            else
-            {
-                lableText = field.Name;
-            }
+
+            Dictionary<string, string> props = new Dictionary<string, string>();
+            props.Add("datum", "14.04.2023");
+            props.Add("user", "Redlfl");
+
+            var lableText = GetFieldText(field, GetPropValue(printContent, $"Field{fieldIndex}"), props);
+
 
             label.Content = lableText;
             label.FontSize = field.Size;
@@ -292,8 +282,39 @@ public partial class MainWindowViewModel
 
     }
 
-    public static object GetPropValue(object src, string propName)
+    private string GetFieldText(FieldModel field, string printContent, Dictionary<string,string> keyValues)
     {
-        return src.GetType().GetProperty(propName).GetValue(src, null);
+        if (string.IsNullOrEmpty(field.Value))
+        {
+            if (string.IsNullOrEmpty(printContent))
+            {
+                return field.Name;
+            }
+            return printContent;
+        }
+        string tempString = new(field.Value);
+
+        foreach (var item in keyValues)
+        {
+            if (field.Value.Contains($"[{item.Key}]"))
+            {
+                string pattern = $@"\[\b{item.Key}\b\]";
+                string replace = item.Value;
+                string result = Regex.Replace(tempString, pattern, replace);
+                tempString = result;
+            }
+        }
+
+        return tempString;
+    }
+
+    public static string GetPropValue(PrintContent? pc, string propName)
+    {
+        if (pc == null) return "";
+        var propval = pc.GetType().GetProperty(propName).GetValue(pc, null);
+
+        if(propval != null) return propval.ToString();
+
+        return "";
     }
 }
