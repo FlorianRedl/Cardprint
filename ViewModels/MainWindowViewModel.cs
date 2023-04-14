@@ -17,6 +17,8 @@ using Cardprint.Properties;
 using System.Diagnostics;
 using System.IO;
 using Cardprint.Utilities;
+using System.Collections;
+using System.Xml;
 
 namespace Cardprint.ViewModels;
 
@@ -42,23 +44,18 @@ public partial class MainWindowViewModel
     public LayoutModel selectedLayout;
     [ObservableProperty]
     public ObservableCollection<LayoutModel> layouts;
-    partial void OnSelectedLayoutNameChanging(string? value)
+    partial void OnSelectedLayoutNameChanging(string value)
     {
         LoadLayout(value);
     }
 
-    // PrintContent
-    //[ObservableProperty]
-    //public float selectedIndex = 1;
-    //[ObservableProperty]
-    //public List<PrintContent> selectedPrintContents;
     [ObservableProperty]
     public List<string> printContentHeaders;
     [ObservableProperty]
     public ObservableCollection<PrintContent> printContentList;
     [ObservableProperty]
     public PrintContent selectedPrintContent;
-    partial void OnSelectedPrintContentChanged(PrintContent? value)
+    partial void OnSelectedPrintContentChanged(PrintContent value)
     {
         //SetViewContent();
     }
@@ -71,19 +68,23 @@ public partial class MainWindowViewModel
     
     public MainWindowViewModel()
     {
-        if (Directory.Exists(LayoutPath))
-        {
-            LayoutNames = new ObservableCollection<string>(XmlReader.GetLayoutNames(LayoutPath));
-        }
-        else
-        {
-            MessageBox.Show("Layout Folder missing!" + "\n \n" + $"Path: {LayoutPath}", "error", MessageBoxButton.OK, MessageBoxImage.Warning);
-        }
-        
+
         printContentHeaders = new List<string>();
         printContentList = new ObservableCollection<PrintContent>();
-
     }
+
+    public void SetLayouts()
+    {
+        if (!Directory.Exists(LayoutPath))
+        {
+            MessageBox.Show("Layout Folder missing!" + "\n \n" + $"Path: {LayoutPath}", "error", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return;
+        }
+        LayoutNames = new ObservableCollection<string>(XmlReader.GetLayoutNames(LayoutPath));
+
+        if (!LayoutNames.Any()) { MessageBox.Show("No Layouts found!" + "\n \n" + $"Path: {LayoutPath}", "error", MessageBoxButton.OK, MessageBoxImage.Information); }
+    }
+
 
     /// <summary>
     /// ------ BUTTONS ------
@@ -122,7 +123,14 @@ public partial class MainWindowViewModel
     {
         var win = new SettingsView();
         win.Show();
+        win.Closed += Settings_Closed;
     }
+
+    private void Settings_Closed(object? sender, EventArgs e)
+    {
+        SetLayouts();
+    }
+
     [RelayCommand]
     private void OpenLayoutFolder()
     {

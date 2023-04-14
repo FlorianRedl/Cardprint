@@ -35,7 +35,7 @@ static public class PrintHelper
 
     }
 
-    public static void TestPrint(Format format,double offsetX, double offsetY,double printScale)
+    public static void PrintTest(Format format,double offsetX, double offsetY,double printScale)
     {
         
 

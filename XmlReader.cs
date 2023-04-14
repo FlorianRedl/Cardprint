@@ -17,7 +17,6 @@ public static class XmlReader
     public static List<string> GetLayoutNames(string path)
     {
         var layoutNames = new List<string>();
-
         try
         {
             var files = Directory.GetFiles(path, "*.xml");

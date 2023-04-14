@@ -58,4 +58,9 @@ public partial class MainWindowView : Window
         var items = DatagridPrintContent.SelectedItems.Cast<PrintContent>().ToList();
        // mainWindowViewModel.SelectedPrintContents = items;
     }
+
+    private void Window_Loaded(object sender, RoutedEventArgs e)
+    {
+        mainWindowViewModel.SetLayouts();
+    }
 }

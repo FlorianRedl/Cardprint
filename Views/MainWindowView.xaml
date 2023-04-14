@@ -14,11 +14,14 @@
         MinWidth="1000"
         WindowStartupLocation="CenterScreen"
         FontSize="14"
+        Loaded="Window_Loaded"
         >
+
+    
     <Window.Resources>
         <ResourceDictionary Source="../ResourceDictionarys/StyleDictionary.xaml"/>
     </Window.Resources>
-    
+   
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
