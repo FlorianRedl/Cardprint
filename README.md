@@ -5,7 +5,7 @@ Minimalist Tool to print SmartCards with predefined fields that can be dynamical
 
 - define Card Layouts via XML File
 - View the Card Layouts with filled data
-- Load data from .xlsx or csv Files
+- Load data from a csv Files
 - Print a single or multiple Cards
 - printed cards are being documented!
 
