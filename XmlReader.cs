@@ -33,36 +33,12 @@ public static class XmlReader
             return layoutNames;
         }
     }
-    //public static List<LayoutModel> GetLayouts(string path)
-    //{
-    //    List<LayoutModel> layouts = new List<LayoutModel>();
-
-    //    try
-    //    {
-    //        var files = Directory.GetFiles(path, "*.xml");
-    //        foreach (var file in files)
-    //        {
-    //            layouts.Add(GetLayoutFromXml(file));
-    //        }
-
-    //        return layouts;
-
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        MessageBox.Show(ex.Message);
-    //        return layouts;
-    //    }
-
-    //}
-
-
 
     public static LayoutModel GetLayout(string filePath,string layoutName)
     {
         XmlDocument doc = new XmlDocument();
         doc.Load(filePath+"\\"+layoutName+".xml");
-        var backgroundImg = doc.GetElementsByTagName("backgroundImg").Item(0)?.InnerText;
+        //var backgroundImg = doc.GetElementsByTagName("backgroundImg").Item(0)?.InnerText;
         var format = doc.GetElementsByTagName("format").Item(0)?.InnerText;
         var fields = doc.GetElementsByTagName("field");
         List<FieldModel> fieldsList = new List<FieldModel>();
@@ -85,10 +61,13 @@ public static class XmlReader
                     case "size":
                         fieldModel.Size = double.Parse(item.InnerText);
                         break;
+                    case "value":
+                        fieldModel.Value = item.InnerText;
+                        break;
                 }
             }
             fieldsList.Add(fieldModel);
         }
-        return new LayoutModel(layoutName, backgroundImg, format, fieldsList);
+        return new LayoutModel(layoutName, format, fieldsList);
     }
 }

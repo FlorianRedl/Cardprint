@@ -19,6 +19,7 @@ using System.IO;
 using Cardprint.Utilities;
 using System.Collections;
 using System.Xml;
+using System.Security.Policy;
 
 namespace Cardprint.ViewModels;
 
@@ -134,10 +135,14 @@ public partial class MainWindowViewModel
     [RelayCommand]
     private void OpenLayoutFolder()
     {
-
         Process.Start("explorer.exe",LayoutPath);
     }
-
+    [RelayCommand]
+    private void OpenGithubCardPrint()
+    {
+        var url ="https://github.com/FlorianRedl/Cardprint";
+        Process.Start("explorer.exe", url);
+    }
     private void LoadLayout(string layoutName)
     {
         if (string.IsNullOrEmpty(layoutName)) return;

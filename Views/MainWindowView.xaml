@@ -36,10 +36,7 @@
             <MenuItem Header="Data">
                 <MenuItem Header="Settings" Command="{Binding OpenSettingsCommand}"></MenuItem>
                 <MenuItem Header="Open Layouts" Command="{Binding OpenLayoutFolderCommand}"></MenuItem>
-            </MenuItem>
-            
-            <MenuItem Header="Help">
-                <MenuItem Header="About CardPrint" ></MenuItem>
+                <MenuItem Header="About CardPrint" Command="{Binding OpenGithubCardPrintCommand}" ></MenuItem>
             </MenuItem>
         </Menu>
         <StackPanel Grid.Row="1" VerticalAlignment="Bottom" Margin="10,0,10,0">

@@ -10,7 +10,7 @@ public partial class LayoutModel : ObservableObject
 {
 
     public string LayoutName { get; set; }
-    public string? BackgroundImg { get; set; }
+    //public string? BackgroundImg { get; set; }
     public string? Format { get; set; }
 
     public (double width,double height) FormatSize { get { return GetFormatSize(); } }
@@ -37,12 +37,11 @@ public partial class LayoutModel : ObservableObject
         }
     }
 
-    public LayoutModel(string layoutName,string? backgroundImg,string? format, List<FieldModel> fields)
+    public LayoutModel(string layoutName,string? format, List<FieldModel> fields)
     {
 
         LayoutName = layoutName;
         Fields = fields;
-        BackgroundImg = backgroundImg;
         Format = format;
     }
 
