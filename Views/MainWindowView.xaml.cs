@@ -61,6 +61,6 @@ public partial class MainWindowView : Window
 
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {
-        mainWindowViewModel.SetLayouts();
+        mainWindowViewModel.StartUp();
     }
 }

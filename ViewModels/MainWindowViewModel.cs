@@ -32,6 +32,7 @@ public partial class MainWindowViewModel
     double ViewSize { get { return Settings.Default.ViewSize; } } // 0.1 bis +2
     // int printResolution { get { return Settings.Default.PrintResolution; } } // nötig ?
     string LayoutPath { get { return Settings.Default.LayoutPath; } } // nötig ?
+    List<FieldValueAttribute> fieldValueAttributes { get; set; }
 
     public Action<string[]> OnSelectedLayoutChanges;
 
@@ -159,7 +160,13 @@ public partial class MainWindowViewModel
         }
         SetView(SelectedLayout);
         SetNewPrintContent(SelectedLayout);
+    }
 
+    public void StartUp()
+    {
+        SetLayouts();
+        var appPath = AppDomain.CurrentDomain.BaseDirectory;
+        fieldValueAttributes = DataAccess.LoadFieldValueAttribute(@$"{appPath}/Data/FieldValueAttributes.xml",out string error);
     }
 
 
@@ -260,11 +267,8 @@ public partial class MainWindowViewModel
         {
             Label label = new Label();
 
-            Dictionary<string, string> props = new Dictionary<string, string>();
-            props.Add("datum", "14.04.2023");
-            props.Add("user", "Redlfl");
 
-            var lableText = GetFieldText(field, GetPropValue(printContent, $"Field{fieldIndex}"), props);
+            var lableText = GetFieldText(field, GetPropValue(printContent, $"Field{fieldIndex}"), fieldValueAttributes);
 
 
             label.Content = lableText;
@@ -282,7 +286,7 @@ public partial class MainWindowViewModel
 
     }
 
-    private string GetFieldText(FieldModel field, string printContent, Dictionary<string,string> keyValues)
+    private string GetFieldText(FieldModel field, string printContent, List<FieldValueAttribute> fieldValueAttributes = null)
     {
         if (string.IsNullOrEmpty(field.Value))
         {
@@ -293,13 +297,15 @@ public partial class MainWindowViewModel
             return printContent;
         }
         string tempString = new(field.Value);
+        if (fieldValueAttributes == null || !fieldValueAttributes.Any()) return tempString;
 
-        foreach (var item in keyValues)
+
+        foreach (var item in fieldValueAttributes)
         {
             if (field.Value.Contains($"[{item.Key}]"))
             {
                 string pattern = $@"\[\b{item.Key}\b\]";
-                string replace = item.Value;
+                string replace = item.Value.ToString();
                 string result = Regex.Replace(tempString, pattern, replace);
                 tempString = result;
             }

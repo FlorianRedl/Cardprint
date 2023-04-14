@@ -1,9 +1,7 @@
-﻿
-namespace Cardprint.Models;
+﻿namespace Cardprint.Models;
 
 public class FieldModel
 {
-
     public string Name { get; set; }
     public double XCord { get; set; }
     public double YCord { get; set; }

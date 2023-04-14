@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ArrayOfFieldValueAttribute xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <FieldValueAttribute>
+    <Key>user</Key>
+    <Value>redlfl</Value>
+  </FieldValueAttribute>
+  <FieldValueAttribute>
+    <Key>datum</Key>
+    <Value>123</Value>
+  </FieldValueAttribute>
+</ArrayOfFieldValueAttribute>
