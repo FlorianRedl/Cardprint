@@ -1,6 +1,5 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"  
                      >
 
     
@@ -21,9 +20,11 @@
         <Setter Property="Source" Value="../Assets/icons8-drucken.png"/>
         <!--<Setter Property="RenderOptions.BitmapScalingMode" Value="HighQuality"/>-->
     </Style>
-    <Style TargetType="Image" x:Key="imgDormakaba">
+    <Style TargetType="Image" x:Key="imgLogo">
         <Setter Property="Source" Value="../Assets/FLR_Logo.png"/>
-
+    </Style>
+    <Style TargetType="Image" x:Key="imgUpdate">
+        <Setter Property="Source" Value="../Assets/icons8-update.png"/>
     </Style>
     <Style x:Key="RoundCorner" TargetType="{x:Type Button}" x:Name="button">
         <Setter Property="HorizontalContentAlignment" Value="Center"/>

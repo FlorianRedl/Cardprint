@@ -56,6 +56,7 @@ public partial class MainWindowViewModel
     public List<string> printContentHeaders;
     [ObservableProperty]
     public ObservableCollection<PrintContent> printContentList;
+
     [ObservableProperty]
     public PrintContent selectedPrintContent;
     partial void OnSelectedPrintContentChanged(PrintContent value)
@@ -75,19 +76,6 @@ public partial class MainWindowViewModel
         printContentHeaders = new List<string>();
         printContentList = new ObservableCollection<PrintContent>();
     }
-
-    public void SetLayouts()
-    {
-        if (!Directory.Exists(LayoutPath))
-        {
-            MessageBox.Show("Layout Folder missing!" + "\n \n" + $"Path: {LayoutPath}", "error", MessageBoxButton.OK, MessageBoxImage.Warning);
-            return;
-        }
-        LayoutNames = new ObservableCollection<string>(XmlReader.GetLayoutNames(LayoutPath));
-
-        if (!LayoutNames.Any()) { MessageBox.Show("No Layouts found!" + "\n \n" + $"Path: {LayoutPath}", "error", MessageBoxButton.OK, MessageBoxImage.Information); }
-    }
-
 
     /// <summary>
     /// ------ BUTTONS ------
@@ -145,6 +133,13 @@ public partial class MainWindowViewModel
         var url ="https://github.com/FlorianRedl/Cardprint";
         Process.Start("explorer.exe", url);
     }
+
+    [RelayCommand]
+    private void RefreshView()
+    {
+        View = GetCanvas(selectedPrintContent, SelectedLayout);
+    }
+
     private void LoadLayout(string layoutName)
     {
         if (string.IsNullOrEmpty(layoutName)) return;
@@ -162,8 +157,17 @@ public partial class MainWindowViewModel
         SetNewPrintContent(SelectedLayout);
     }
 
-    
+    public void SetLayouts()
+    {
+        if (!Directory.Exists(LayoutPath))
+        {
+            MessageBox.Show("Layout Folder missing!" + "\n \n" + $"Path: {LayoutPath}", "error", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return;
+        }
+        LayoutNames = new ObservableCollection<string>(XmlReader.GetLayoutNames(LayoutPath));
 
+        if (!LayoutNames.Any()) { MessageBox.Show("No Layouts found!" + "\n \n" + $"Path: {LayoutPath}", "error", MessageBoxButton.OK, MessageBoxImage.Information); }
+    }
 
     /// <summary>
     /// ------ VIEW ------
@@ -262,8 +266,8 @@ public partial class MainWindowViewModel
         {
             Label label = new Label();
 
-            var lableText = GetFieldText(field, GetPropValue(printContent, $"Field{fieldIndex}"));
-
+            var lableText = GetFieldText(field, GetPropValue(printContent, $"Field{fieldIndex}"),out bool isFilled);
+            label.Foreground = isFilled ? new SolidColorBrush(Colors.Black) : new SolidColorBrush(Colors.LightGray);
             label.Content = lableText;
             label.FontSize = field.Size;
             label.Padding = new Thickness(0);
@@ -279,20 +283,23 @@ public partial class MainWindowViewModel
 
     }
 
-    private string GetFieldText(FieldModel field, string printContent)
+    private string GetFieldText(FieldModel field, string printContent, out bool isFilled)
     {
         if (string.IsNullOrEmpty(field.Value))
         {
             if (string.IsNullOrEmpty(printContent))
             {
+                isFilled = false;
                 return field.Name;
+
             }
+            isFilled = true;
             return printContent;
         }
         string tempString = new(field.Value);
         
         CheckFieldValueAttributes(ref tempString, FieldValueAttributes);
-
+        isFilled = true;
         return tempString;
     }
 
@@ -335,6 +342,6 @@ public partial class MainWindowViewModel
     {
         SetLayouts();
         var appPath = AppDomain.CurrentDomain.BaseDirectory;
-        FieldValueAttributes = DataAccess.LoadFieldValueAttribute(@$"{appPath}/Data/FieldValueAttributes.xml", out string error);
+        FieldValueAttributes = DataAccess.LoadFieldValueAttribute(@$"{appPath}/FieldValueAttributes.xml", out string error);
     }
 }

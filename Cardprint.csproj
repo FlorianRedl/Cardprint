@@ -14,10 +14,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Assets\640px-Dormakaba_logo.png" />
     <None Remove="Assets\FLR_Logo.png" />
     <None Remove="Assets\icons8-datei-importieren.png" />
     <None Remove="Assets\icons8-drucken.png" />
+    <None Remove="Assets\icons8-update.png" />
     <None Remove="Assets\icons8-zeile-löschen.png" />
     <None Remove="Assets\icons8-zeile-oberhalb-einfügen.png" />
   </ItemGroup>
@@ -27,7 +27,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Assets\640px-Dormakaba_logo.png" />
+    <Resource Include="Assets\icons8-update.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Resource Include="Assets\FLR_Logo.png" />
     <Resource Include="Assets\icons8-datei-importieren.png" />
     <Resource Include="Assets\icons8-drucken.png" />
@@ -49,7 +52,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Data\FieldValueAttributes.xml">
+    <None Update="FieldValueAttributes.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Properties\Settings.settings">

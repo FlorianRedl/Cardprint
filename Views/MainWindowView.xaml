@@ -48,7 +48,7 @@
                 
             </DockPanel>
         </StackPanel>
-        <Image Grid.Row="1" Grid.Column="1" Height="35" HorizontalAlignment="Right" Style="{StaticResource imgDormakaba}" Margin="20,5"/>
+        <Image Grid.Row="1" Grid.Column="1" Height="35" HorizontalAlignment="Right" Style="{StaticResource imgLogo}" Margin="20,5"/>
        
         
         <Grid Grid.Row="2" Grid.RowSpan="2" Grid.Column="1" Margin="0,10,10,10" >
@@ -74,11 +74,11 @@
                     <Image Style="{StaticResource imgPrint}"/>
                 </Button>
             </DockPanel>
-           
+
             <DataGrid Grid.Row="0" Grid.Column="1" 
                       ItemsSource="{Binding PrintContentList, Mode=TwoWay}" 
                       x:Name="DatagridPrintContent" 
-                      CanUserAddRows="False" 
+                      CanUserAddRows="False"  
                       AutoGenerateColumns="False"
                       CanUserDeleteRows="False" 
                       CanUserReorderColumns="False" 
@@ -89,8 +89,7 @@
                       CanUserSortColumns="false"
                       FontSize="14"
                       >
-                      
-                </DataGrid>
+            </DataGrid>
             
         </Grid>
 
@@ -103,8 +102,8 @@
         <Border Grid.Row="2" Grid.RowSpan="2" Grid.Column="0" Margin="10" BorderBrush="#A2A2A2" BorderThickness="2" Background="Transparent" Panel.ZIndex="1" >
             <ContentPresenter  Content="{Binding View}"/>
         </Border>
-        <!--<Button Grid.Column="0" Grid.Row="2" Width="30" Height="30" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="20" Style="{StaticResource refreshButton}" Command="{Binding ResetViewCommand}">
-            <Image Style="{StaticResource refreshImg}"></Image>
-        </Button>-->
+        <Button Grid.Column="0" Grid.Row="2" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="15" Style="{StaticResource RoundCorner}" Command="{Binding RefreshViewCommand}" Panel.ZIndex="2" >
+            <Image Style="{StaticResource imgUpdate}"></Image>
+        </Button>
     </Grid>
 </Window>
