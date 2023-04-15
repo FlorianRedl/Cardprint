@@ -21,6 +21,7 @@ using System.Collections;
 using System.Xml;
 using System.Security.Policy;
 using System.Text.RegularExpressions;
+using System.Windows.Threading;
 
 namespace Cardprint.ViewModels;
 
@@ -61,20 +62,39 @@ public partial class MainWindowViewModel
     public PrintContent selectedPrintContent;
     partial void OnSelectedPrintContentChanged(PrintContent value)
     {
-        //SetViewContent();
-    }
 
+    }
+    [ObservableProperty]
+    public string printStatus;
     [ObservableProperty]
     public Canvas view;
     [ObservableProperty]
     public Canvas viewBackground;
 
-    
+    private DispatcherTimer timer = new DispatcherTimer();
     public MainWindowViewModel()
     {
-
         printContentHeaders = new List<string>();
         printContentList = new ObservableCollection<PrintContent>();
+
+        
+        timer.Interval = TimeSpan.FromMilliseconds(200);
+        timer.Tick += Timer_Tick;
+        
+    }
+
+    private void Timer_Tick(object? sender, EventArgs e)
+    {
+        var printQueue = new LocalPrintServer().GetPrintQueue(Settings.Default.SelectedPrinter);
+        printQueue.Refresh();
+        var n = printQueue.NumberOfJobs;
+        if(n <= 0) 
+        {
+            PrintStatus = "";
+            timer.Stop();
+            return;
+        };
+        PrintStatus = $"Printqueue: {n}";
     }
 
     /// <summary>
@@ -140,6 +160,18 @@ public partial class MainWindowViewModel
         View = GetCanvas(selectedPrintContent, SelectedLayout);
     }
 
+    [RelayCommand]
+    private void Print()
+    {
+        timer.Start();
+
+        foreach (var item in PrintContentList)
+        {
+            PrintHelper.Print(GetCanvas(item, SelectedLayout));
+        }
+        
+
+    }
     private void LoadLayout(string layoutName)
     {
         if (string.IsNullOrEmpty(layoutName)) return;
@@ -240,26 +272,15 @@ public partial class MainWindowViewModel
     }
 
 
-    /// <summary>
-    /// ------ Printing ------
-    /// </summary>
-    [RelayCommand]
-    private void Print()
-    {
-        PrintHelper.Print();
-
-    }
-
     private Canvas GetCanvas(PrintContent? printContent, LayoutModel layout)
     {
-
+        if (layout == null) return new Canvas();
         var canvas = new Canvas();
         var width = Calc.MillimeterToPixel(layout.FormatSize.height, ViewSize);
         var height = Calc.MillimeterToPixel(layout.FormatSize.width, ViewSize);
         canvas.Width = width;
         canvas.Height = height;
         canvas.Arrange(new Rect(new Size(width,height)));
-        //canvas.Background = new SolidColorBrush(Colors.Beige);
 
         int fieldIndex = 1;
         foreach (var field in layout.Fields)

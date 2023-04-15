@@ -42,10 +42,11 @@
         <StackPanel Grid.Row="1" VerticalAlignment="Bottom" Margin="10,0,10,0">
             <DockPanel >
                 <TextBlock Text="Layout: " Margin="0,0,5,0"></TextBlock>
-                <ComboBox ItemsSource="{Binding LayoutNames}" SelectedItem="{Binding SelectedLayoutName}" >
-  
-                </ComboBox>
-                
+                <ComboBox ItemsSource="{Binding LayoutNames}" SelectedItem="{Binding SelectedLayoutName}" Width="100" DockPanel.Dock="Left"/>
+                <TextBlock DockPanel.Dock="Right" Text="{Binding PrintStatus}" HorizontalAlignment="Right"/>
+
+
+
             </DockPanel>
         </StackPanel>
         <Image Grid.Row="1" Grid.Column="1" Height="35" HorizontalAlignment="Right" Style="{StaticResource imgLogo}" Margin="20,5"/>

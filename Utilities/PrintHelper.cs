@@ -22,15 +22,14 @@ static public class PrintHelper
 
 
 
-    public static void Print()
+    public static void Print(Canvas pCanvas)
     {
         PrintDialog pd = new PrintDialog();
         PrintQueue queue = new LocalPrintServer().GetPrintQueue(Settings.Default.SelectedPrinter);
         pd.PrintQueue = queue;
        
-
         //var pCanvas = GetCanvas(SelectedPrintContent, SelectedLayout);
-        //pd.PrintVisual(pCanvas, "printing Card");
+        pd.PrintVisual(pCanvas, "printing Card");
 
     }
 
@@ -50,9 +49,7 @@ static public class PrintHelper
         var pCanvas = GetTestCanvas(format,offsetX, offsetY, printScale);
         pd.PrintVisual(pCanvas, "printing Card");
 
-
     }
-
 
 
     private static Canvas GetTestCanvas(Format format ,double offsetX, double offsetY, double scale)
@@ -99,28 +96,6 @@ static public class PrintHelper
         return canvas;
 
     }
-    private static Canvas GetCanvas(Format format, double offsetX, double offsetY, double scale)
-    {
-
-        var canvas = new Canvas();
-        var width = Calc.MillimeterToPixel(format.Width, scale);
-        var height = Calc.MillimeterToPixel(format.Height, scale);
-        canvas.Width = width;
-        canvas.Height = height;
-        canvas.Arrange(new Rect(new Size(width, height)));
-
-        //Border
-        Border border = new Border();
-        border.BorderThickness = new Thickness(2);
-        border.BorderBrush = Brushes.Black;
-        border.CornerRadius = new CornerRadius(14);
-        border.Width = width;
-        border.Height = height;
-        canvas.Children.Add(border);
-
- 
-
-        return canvas;
-
-    }
+    
+    
 }

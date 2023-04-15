@@ -94,10 +94,10 @@ internal partial class SettingsViewModel : ObservableValidator
         var b = queue.IsProcessing;
         var c = queue.IsWaiting;
         var n = queue.NumberOfJobs;
+        var x = queue.QueueStatus;
 
         PrinterStatus = $"PrintQueue Items: {n}";
 
-       
     }
 
     [RelayCommand]
