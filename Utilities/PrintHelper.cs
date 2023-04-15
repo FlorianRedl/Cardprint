@@ -20,7 +20,6 @@ namespace Cardprint.Utilities;
 static public class PrintHelper
 {
 
-    
 
 
     public static void Print()

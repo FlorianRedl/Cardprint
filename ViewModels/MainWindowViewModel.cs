@@ -32,7 +32,7 @@ public partial class MainWindowViewModel
     double ViewSize { get { return Settings.Default.ViewSize; } } // 0.1 bis +2
     // int printResolution { get { return Settings.Default.PrintResolution; } } // nötig ?
     string LayoutPath { get { return Settings.Default.LayoutPath; } } // nötig ?
-    List<FieldValueAttribute> fieldValueAttributes { get; set; }
+    List<FieldValueAttribute> FieldValueAttributes { get; set; }
 
     public Action<string[]> OnSelectedLayoutChanges;
 
@@ -96,7 +96,7 @@ public partial class MainWindowViewModel
     [RelayCommand]
     private void LoadFromFile()
     {
-        MessageBox.Show("[LoadFromFile] not implemented yet");
+        MessageBox.Show("[LoadFromFile] not implemented!");
     }
     [RelayCommand]
     private void AddContent()
@@ -162,12 +162,7 @@ public partial class MainWindowViewModel
         SetNewPrintContent(SelectedLayout);
     }
 
-    public void StartUp()
-    {
-        SetLayouts();
-        var appPath = AppDomain.CurrentDomain.BaseDirectory;
-        fieldValueAttributes = DataAccess.LoadFieldValueAttribute(@$"{appPath}/Data/FieldValueAttributes.xml",out string error);
-    }
+    
 
 
     /// <summary>
@@ -267,9 +262,7 @@ public partial class MainWindowViewModel
         {
             Label label = new Label();
 
-
-            var lableText = GetFieldText(field, GetPropValue(printContent, $"Field{fieldIndex}"), fieldValueAttributes);
-
+            var lableText = GetFieldText(field, GetPropValue(printContent, $"Field{fieldIndex}"));
 
             label.Content = lableText;
             label.FontSize = field.Size;
@@ -286,7 +279,7 @@ public partial class MainWindowViewModel
 
     }
 
-    private string GetFieldText(FieldModel field, string printContent, List<FieldValueAttribute> fieldValueAttributes = null)
+    private string GetFieldText(FieldModel field, string printContent)
     {
         if (string.IsNullOrEmpty(field.Value))
         {
@@ -297,23 +290,38 @@ public partial class MainWindowViewModel
             return printContent;
         }
         string tempString = new(field.Value);
-        if (fieldValueAttributes == null || !fieldValueAttributes.Any()) return tempString;
-
-
-        foreach (var item in fieldValueAttributes)
-        {
-            if (field.Value.Contains($"[{item.Key}]"))
-            {
-                string pattern = $@"\[\b{item.Key}\b\]";
-                string replace = item.Value.ToString();
-                string result = Regex.Replace(tempString, pattern, replace);
-                tempString = result;
-            }
-        }
+        
+        CheckFieldValueAttributes(ref tempString, FieldValueAttributes);
 
         return tempString;
     }
 
+
+    private void CheckFieldValueAttributes(ref string fieldValue, List<FieldValueAttribute> fieldValueAttributes)
+    {
+        if (fieldValueAttributes == null || !fieldValueAttributes.Any()) return;
+
+        foreach (var item in fieldValueAttributes)
+        {
+            if (fieldValue.Contains($"[{item.Key}]"))
+            {
+                string pattern = $@"\[\b{item.Key}\b\]";
+                string replace = item.Value.ToString();
+                string result = Regex.Replace(fieldValue, pattern, replace);
+                fieldValue = result;
+            }
+        }
+
+        if (fieldValue.Contains($"[date]"))
+        {
+            string pattern = $@"\[\bdate\b\]";
+            string replace = DateTime.Now.ToString("dd.MM.yyyy");
+            string result = Regex.Replace(fieldValue, pattern, replace);
+            fieldValue = result;
+        }
+
+      
+    }
     public static string GetPropValue(PrintContent? pc, string propName)
     {
         if (pc == null) return "";
@@ -322,5 +330,11 @@ public partial class MainWindowViewModel
         if(propval != null) return propval.ToString();
 
         return "";
+    }
+    public void StartUp()
+    {
+        SetLayouts();
+        var appPath = AppDomain.CurrentDomain.BaseDirectory;
+        FieldValueAttributes = DataAccess.LoadFieldValueAttribute(@$"{appPath}/Data/FieldValueAttributes.xml", out string error);
     }
 }
