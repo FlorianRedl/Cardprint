@@ -8,7 +8,6 @@ using Cardprint.Models;
 
 namespace Cardprint.Utilities;
 
-
 public static class Calc
 {
 
@@ -19,6 +18,5 @@ public static class Calc
         double inches = millimeter / 25.4;
         return (int)Math.Round(inches * dpi * factor);
     }
-
 
 }

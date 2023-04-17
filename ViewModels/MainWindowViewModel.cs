@@ -33,7 +33,6 @@ public partial class MainWindowViewModel
     double ViewSize { get { return Settings.Default.ViewSize; } } // 0.1 bis +2
     // int printResolution { get { return Settings.Default.PrintResolution; } } // nötig ?
     string LayoutPath { get { return Settings.Default.LayoutPath; } } // nötig ?
-    List<FieldValueAttribute> FieldValueAttributes { get; set; }
 
     public Action<string[]> OnSelectedLayoutChanges;
 
@@ -201,9 +200,6 @@ public partial class MainWindowViewModel
         if (!LayoutNames.Any()) { MessageBox.Show("No Layouts found!" + "\n \n" + $"Path: {LayoutPath}", "error", MessageBoxButton.OK, MessageBoxImage.Information); }
     }
 
-    /// <summary>
-    /// ------ VIEW ------
-    /// </summary>
     private void LoadView(LayoutModel layout)
     {
         if (layout == null) return;
@@ -233,9 +229,6 @@ public partial class MainWindowViewModel
         
     }
 
-    /// <summary>
-    /// ------ PrintContent ------
-    /// </summary>
     private void SetNewPrintContent(LayoutModel layout)
     {
         PrintContentList.Clear();
@@ -306,63 +299,50 @@ public partial class MainWindowViewModel
 
     private string GetFieldText(FieldModel field, string printContent, out bool isFilled)
     {
-        if (string.IsNullOrEmpty(field.Value))
+        if(CheckFieldValue(ref field))
         {
-            if (string.IsNullOrEmpty(printContent))
-            {
-                isFilled = false;
-                return field.Name;
-
-            }
+            isFilled = true;
+            return field.Value;
+        }
+        if (!string.IsNullOrEmpty(printContent))
+        {
             isFilled = true;
             return printContent;
         }
-        string tempString = new(field.Value);
-        
-        CheckFieldValueAttributes(ref tempString, FieldValueAttributes);
-        isFilled = true;
-        return tempString;
+        isFilled = false;
+        return field.Name;
     }
 
-
-    private void CheckFieldValueAttributes(ref string fieldValue, List<FieldValueAttribute> fieldValueAttributes)
+    private bool CheckFieldValue(ref FieldModel field)
     {
-        if (fieldValueAttributes == null || !fieldValueAttributes.Any()) return;
+        if (string.IsNullOrEmpty(field.Value)) return false;
 
-        foreach (var item in fieldValueAttributes)
+        
+        if (field.Value.Contains($"[date]"))
         {
-            if (fieldValue.Contains($"[{item.Key}]"))
-            {
-                string pattern = $@"\[\b{item.Key}\b\]";
-                string replace = item.Value.ToString();
-                string result = Regex.Replace(fieldValue, pattern, replace);
-                fieldValue = result;
-            }
+            var pattern = $@"\[\bdate\b\]";
+            var replace = DateTime.Now.ToString("dd.MM.yyyy");
+            string result = Regex.Replace(field.Value, pattern, replace);
+            field.Value = result;
         }
+        // Check for [WindowsUser]
 
-        if (fieldValue.Contains($"[date]"))
-        {
-            string pattern = $@"\[\bdate\b\]";
-            string replace = DateTime.Now.ToString("dd.MM.yyyy");
-            string result = Regex.Replace(fieldValue, pattern, replace);
-            fieldValue = result;
-        }
 
-      
+        
+        return true;
     }
+
+
     public static string GetPropValue(PrintContent? pc, string propName)
     {
         if (pc == null) return "";
         var propval = pc.GetType().GetProperty(propName).GetValue(pc, null);
-
         if(propval != null) return propval.ToString();
-
         return "";
     }
     public void StartUp()
     {
         SetLayouts();
         var appPath = AppDomain.CurrentDomain.BaseDirectory;
-        FieldValueAttributes = DataAccess.LoadFieldValueAttribute(@$"{appPath}/FieldValueAttributes.xml", out string error);
     }
 }
