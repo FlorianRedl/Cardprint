@@ -22,13 +22,10 @@ namespace Cardprint.Models
         public string? Field9 { get; set; }
         public string? Field10{ get; set; }
 
-        public bool IsSelected { get; set; }
-
         public PrintContent()
         {
 
         }
-       
 
        
     }

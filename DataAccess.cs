@@ -1,40 +1,72 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Xml.Serialization;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Xml;
 using Cardprint.Models;
+
 
 namespace Cardprint;
 
-static partial class DataAccess
+public static class DataAccess
 {
-    public static List<FieldValueAttribute> LoadFieldValueAttribute(string path, out string error)
+    public static List<string> GetLayoutNames(string path)
     {
-        error = string.Empty;
-        List<FieldValueAttribute> list = new();
-        if (!File.Exists(path))
-        {
-            error = $"File does not exist ({path})";
-            return new List<FieldValueAttribute>();
-        }
-
+        var layoutNames = new List<string>();
         try
         {
-            using (var stream = File.OpenRead(path))
+            var files = Directory.GetFiles(path, "*.xml");
+            foreach (var file in files)
             {
-                var xmlSerializer = new XmlSerializer(typeof(List<FieldValueAttribute>));
-                var l = xmlSerializer.Deserialize(stream) as List<FieldValueAttribute>;
-                if (l != null) list = l;
-                return list;
-
+                layoutNames.Add(Path.GetFileNameWithoutExtension(file));
             }
+            return layoutNames;
 
         }
         catch (Exception ex)
         {
-            error = ex.Message;
-            return new List<FieldValueAttribute>();
+            MessageBox.Show(ex.Message);
+            return layoutNames;
         }
+    }
 
+    public static LayoutModel GetLayout(string filePath,string layoutName)
+    {
+        XmlDocument doc = new XmlDocument();
+        doc.Load(filePath+"\\"+layoutName+".xml");
+        //var backgroundImg = doc.GetElementsByTagName("backgroundImg").Item(0)?.InnerText;
+        var format = doc.GetElementsByTagName("format").Item(0)?.InnerText;
+        var fields = doc.GetElementsByTagName("field");
+        List<FieldModel> fieldsList = new List<FieldModel>();
+        foreach (XmlNode field in fields)
+        {
+            FieldModel fieldModel = new();
+            foreach (XmlNode item in field.ChildNodes)
+            {
+                switch (item.Name)
+                {
+                    case "name":
+                        fieldModel.Name = item.InnerText;
+                        break;
+                    case "x":
+                        fieldModel.XCord = double.Parse(item.InnerText);
+                        break;
+                    case "y":
+                        fieldModel.YCord = double.Parse(item.InnerText);
+                        break;
+                    case "size":
+                        fieldModel.Size = double.Parse(item.InnerText);
+                        break;
+                    case "value":
+                        fieldModel.Value = item.InnerText;
+                        break;
+                }
+            }
+            fieldsList.Add(fieldModel);
+        }
+        return new LayoutModel(layoutName, format, fieldsList);
     }
 }

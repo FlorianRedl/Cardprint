@@ -14,6 +14,7 @@
         MinWidth="450"
         WindowStartupLocation="CenterScreen"
         x:Name="window"
+        Topmost="True"
         >
     <Grid>
         <Grid.ColumnDefinitions>
@@ -21,9 +22,6 @@
 
         </Grid.ColumnDefinitions>
 
-        <!--<Border  ClipToBounds="True" BorderBrush="#A2A2A2" BorderThickness="2" Background="Transparent">
-            <ContentPresenter />
-        </Border>-->
 
         <DockPanel Grid.Row="0"  Grid.Column="1" Margin="10">
             <GroupBox DockPanel.Dock="Top" Header="General">

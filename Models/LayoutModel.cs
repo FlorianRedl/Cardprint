@@ -39,7 +39,6 @@ public partial class LayoutModel : ObservableObject
 
     public LayoutModel(string layoutName,string? format, List<FieldModel> fields)
     {
-
         LayoutName = layoutName;
         Fields = fields;
         Format = format;
