@@ -169,6 +169,9 @@ public partial class MainWindowViewModel
     {
         timer.Start();
 
+        var result = MessageBox.Show($"Do you want to print {PrintContentList.Count()} Cards?", "Print", MessageBoxButton.YesNo);
+        if(result == MessageBoxResult.No) { return; }
+
         foreach (var item in PrintContentList)
         {
             PrintHelper.Print(GetCanvas(item, SelectedLayout));
