@@ -61,7 +61,7 @@ public partial class MainWindowViewModel
     public PrintContent selectedPrintContent;
     partial void OnSelectedPrintContentChanged(PrintContent value)
     {
-
+        View = GetCanvas(selectedPrintContent, SelectedLayout);
     }
     [ObservableProperty]
     public string printStatus;
