@@ -37,6 +37,7 @@
                 <MenuItem Header="Settings" Command="{Binding OpenSettingsCommand}"></MenuItem>
                 <MenuItem Header="Open Layouts" Command="{Binding OpenLayoutFolderCommand}"></MenuItem>
                 <MenuItem Header="About CardPrint" Command="{Binding OpenGithubCardPrintCommand}" ></MenuItem>
+                <MenuItem Header="About flr-studios" Command="{Binding OpenFlrStudiosCommand}" ></MenuItem>
             </MenuItem>
         </Menu>
         <StackPanel Grid.Row="1" VerticalAlignment="Bottom" Margin="10,0,10,0">

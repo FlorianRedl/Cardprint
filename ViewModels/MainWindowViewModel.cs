@@ -152,7 +152,12 @@ public partial class MainWindowViewModel
         var url ="https://github.com/FlorianRedl/Cardprint";
         Process.Start("explorer.exe", url);
     }
-
+    [RelayCommand]
+    private void OpenFlrStudios()
+    {
+        var url = "https://www.flr-studios.at";
+        Process.Start("explorer.exe", url);
+    }
     [RelayCommand]
     private void RefreshView()
     {
