@@ -28,6 +28,7 @@ public partial class LayoutModel : ObservableObject
 
     private (double width, double height) GetFormatSize()
     {
+        if (Format == null) return (0,0); 
         switch (Format)
         {
             case "ID-1":
@@ -39,7 +40,6 @@ public partial class LayoutModel : ObservableObject
 
     public LayoutModel(string layoutName,string? format, List<FieldModel> fields)
     {
-
         LayoutName = layoutName;
         Fields = fields;
         Format = format;

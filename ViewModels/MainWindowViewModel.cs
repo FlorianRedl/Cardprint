@@ -183,7 +183,7 @@ public partial class MainWindowViewModel
     {
         if (string.IsNullOrEmpty(layoutName)) return;
 
-        SelectedLayout = XmlReader.GetLayout(LayoutPath, layoutName);
+        SelectedLayout = DataAccess.GetLayout(LayoutPath, layoutName);
         string error;
         if (!SelectedLayout.IsValide(out error))
         {
@@ -203,7 +203,7 @@ public partial class MainWindowViewModel
             MessageBox.Show("Layout Folder missing!" + "\n \n" + $"Path: {LayoutPath}", "error", MessageBoxButton.OK, MessageBoxImage.Warning);
             return;
         }
-        LayoutNames = new ObservableCollection<string>(XmlReader.GetLayoutNames(LayoutPath));
+        LayoutNames = new ObservableCollection<string>(DataAccess.GetLayoutNames(LayoutPath));
 
         if (!LayoutNames.Any()) { MessageBox.Show("No Layouts found!" + "\n \n" + $"Path: {LayoutPath}", "error", MessageBoxButton.OK, MessageBoxImage.Information); }
     }
@@ -333,8 +333,6 @@ public partial class MainWindowViewModel
             string result = Regex.Replace(field.Value, pattern, replace);
             field.Value = result;
         }
-        // Check for [WindowsUser]
-
 
         
         return true;
