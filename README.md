@@ -15,4 +15,10 @@ Minimalist Tool to print SmartCards with predefined fields that can be dynamical
 - ID-2 (105.00 mm, 74.00 mm)
 
 
-![Main View](https://raw.githubusercontent.com/FlorianRedl/Cardprint/master/Assets/Screenshot_MainView.png)
+### Main View
+![Main View1](https://raw.githubusercontent.com/FlorianRedl/Cardprint/master/Screenshots/CardPrint1.PNG)
+
+![Main View2](https://raw.githubusercontent.com/FlorianRedl/Cardprint/master/Screenshots/CardPrint3.PNG)
+
+### Settings
+![Settings View](https://raw.githubusercontent.com/FlorianRedl/Cardprint/master/Screenshots/CardPrint_Settings.PNG)
