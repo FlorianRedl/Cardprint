@@ -42,8 +42,8 @@ static class CanvasHelper
         if (layout == null) return new Canvas();
 
         var canvas = new Canvas();
-        var width = Calc.MillimeterToPixel(layout.FormatSize.height, viewSize);
-        var height = Calc.MillimeterToPixel(layout.FormatSize.width, viewSize);
+        var width = MillimeterToPixel(layout.FormatSize.height, viewSize);
+        var height = MillimeterToPixel(layout.FormatSize.width, viewSize);
         canvas.Width = width;
         canvas.Height = height;
         canvas.Arrange(new Rect(new Size(width, height)));
@@ -67,8 +67,8 @@ static class CanvasHelper
             label.FontSize = field.Size;
             label.Padding = new Thickness(0);
             canvas.Children.Add(label);
-            var x = Calc.MillimeterToPixel(field.XCord, viewSize);
-            var y = Calc.MillimeterToPixel(field.YCord, viewSize);
+            var x = MillimeterToPixel(field.XCord, viewSize);
+            var y = MillimeterToPixel(field.YCord, viewSize);
             Canvas.SetLeft(label, x);
             Canvas.SetTop(label, y);
             fieldIndex++;

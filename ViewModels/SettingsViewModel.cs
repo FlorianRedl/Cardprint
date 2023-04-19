@@ -119,7 +119,7 @@ internal partial class SettingsViewModel : ObservableValidator
     private void TestPrint()
     {
         timer.Start();
-        PrintHelper.PrintTest(SelectedFormat,OffsetX, OffsetY,PrintScale);
+        PrintHelper.Print(CanvasHelper.GetTestPrintCanvas(SelectedFormat,OffsetX, OffsetY,PrintScale));
     }
 
     [RelayCommand]

@@ -20,8 +20,6 @@ namespace Cardprint.Utilities;
 static public class PrintHelper
 {
 
-
-
     public static void Print(Canvas pCanvas)
     {
         PrintDialog pd = new PrintDialog();
@@ -33,26 +31,5 @@ static public class PrintHelper
 
     }
 
-    public static void PrintTest(Format format,double offsetX, double offsetY,double printScale)
-    {
-        
-
-        PrintDialog pd = new PrintDialog();
-        PrintQueue queue = new LocalPrintServer().GetPrintQueue(Settings.Default.SelectedPrinter);
-        
-        pd.PrintQueue = queue;
-        //PageMediaSize pSize = new PageMediaSize(120.60, 53.98);
-        //PageResolution pr = new PageResolution(1200, 1200);
-        //pd.PrintTicket.PageMediaSize = pSize;
-        //pd.PrintTicket.PageResolution = pr;
-       
-        var pCanvas = GetTestCanvas(format,offsetX, offsetY, printScale);
-        pd.PrintVisual(pCanvas, "printing Card");
-
-    }
-
-
-    
-    
     
 }
