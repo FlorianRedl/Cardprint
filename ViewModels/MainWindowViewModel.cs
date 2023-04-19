@@ -76,30 +76,11 @@ public partial class MainWindowViewModel
         printContentHeaders = new List<string>();
         printContentList = new ObservableCollection<PrintContent>();
 
-        
         timer.Interval = TimeSpan.FromMilliseconds(200);
         timer.Tick += Timer_Tick;
         
     }
 
-    private void Timer_Tick(object? sender, EventArgs e)
-    {
-        var printQueue = new LocalPrintServer().GetPrintQueue(Settings.Default.SelectedPrinter);
-        printQueue.Refresh();
-        var n = printQueue.NumberOfJobs;
-        if(n <= 0) 
-        {
-            PrintStatus = "";
-            timer.Stop();
-            return;
-        };
-        PrintStatus = $"Printqueue: {n}";
-    }
-
-    /// <summary>
-    /// ------ BUTTONS ------
-    /// </summary>
-    /// 
     [RelayCommand]
     private void LoadFromFile()
     {
@@ -228,7 +209,6 @@ public partial class MainWindowViewModel
         OnSelectedLayoutChanges?.Invoke(null);
     }
 
-
     private Dictionary<string,string> GetFieldValues(PrintContent printContent,LayoutModel layout)
     {
         Dictionary<string, string> fieldValues = new();
@@ -253,7 +233,6 @@ public partial class MainWindowViewModel
         return fieldValues;
     }
 
-
     private string GetFieldValue(FieldModel field)
     {
         string tempValue = string.Empty;
@@ -270,7 +249,6 @@ public partial class MainWindowViewModel
         return tempValue;
     }
 
-
     public static string GetPropValueFromPrintContent(PrintContent pc, string propName)
     {
         if (pc == null) return "";
@@ -278,6 +256,20 @@ public partial class MainWindowViewModel
         if(propval != null) return propval.ToString();
         return "";
     }
+    private void Timer_Tick(object? sender, EventArgs e)
+    {
+        var printQueue = new LocalPrintServer().GetPrintQueue(Settings.Default.SelectedPrinter);
+        printQueue.Refresh();
+        var n = printQueue.NumberOfJobs;
+        if (n <= 0)
+        {
+            PrintStatus = "";
+            timer.Stop();
+            return;
+        };
+        PrintStatus = $"Printqueue: {n}";
+    }
+
     public void StartUp()
     {
         SetLayouts();
