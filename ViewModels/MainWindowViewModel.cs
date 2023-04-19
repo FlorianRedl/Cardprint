@@ -158,15 +158,7 @@ public partial class MainWindowViewModel
         var url = "https://www.flr-studios.at";
         Process.Start("explorer.exe", url);
     }
-    [RelayCommand]
-    private void RefreshView()
-    {
-        var t = printContentList;
-
-
-
-        View = CanvasHelper.GetViewCard(new Dictionary<string, string>(), SelectedLayout, ViewSize);
-    }
+   
 
     [RelayCommand]
     private void Print()
@@ -211,17 +203,17 @@ public partial class MainWindowViewModel
         if (!LayoutNames.Any()) { MessageBox.Show("No Layouts found!" + "\n \n" + $"Path: {LayoutPath}", "error", MessageBoxButton.OK, MessageBoxImage.Information); }
     }
 
-   
+    [RelayCommand]
     private void SetView()
     {
         ViewBackground = CanvasHelper.GetViewBackground(SelectedLayout,ViewSize);
-        View = GetCanvas(null, SelectedLayout);
+        View = CanvasHelper.GetViewCard(GetFieldValues(SelectedPrintContent, SelectedLayout), SelectedLayout, ViewSize);
     }
     
     private void ClearView()
     {
-        View = null;
-        ViewBackground = null;
+        View.Children.Clear();
+        ViewBackground.Children.Clear();
         
     }
 
@@ -254,8 +246,8 @@ public partial class MainWindowViewModel
         {
             Label label = new Label();
 
-            var lableText = GetFieldText(field, GetPropValue(printContent, $"Field{fieldIndex}"),out bool isFilled);
-            label.Foreground = isFilled ? new SolidColorBrush(Colors.Black) : new SolidColorBrush(Colors.LightGray);
+            var lableText = ""; //GetFieldText(field, GetPropValue(printContent, $"Field{fieldIndex}"),out bool isFilled);
+            //label.Foreground = isFilled ? new SolidColorBrush(Colors.Black) : new SolidColorBrush(Colors.LightGray);
             label.Content = lableText;
             label.FontSize = field.Size;
             label.Padding = new Thickness(0);
@@ -271,52 +263,49 @@ public partial class MainWindowViewModel
 
     }
 
-    private Dictionary<string,string> GetFieldValues()
+    private Dictionary<string,string> GetFieldValues(PrintContent printContent,LayoutModel layout)
     {
         Dictionary<string, string> fieldValues = new();
 
-        foreach (var printContent in printContentList)
+        int fieldIndex = 1;
+        foreach (var field in layout.Fields)
         {
+            var fieldValue = GetFieldValue(field);
+            if (!string.IsNullOrEmpty(fieldValue))
+            {
+                fieldValues.Add(field.Name, fieldValue);
+            }
+            var propValue = GetPropValueFromPrintContent(printContent,$"Field{fieldIndex}");
+            if (!string.IsNullOrEmpty(propValue)) 
+            {
+                fieldValues.Add(field.Name, propValue);
+            }
 
-
+            fieldIndex++;
         }
+        
         return fieldValues;
     }
 
 
-    private string GetFieldText(FieldModel field, string printContent, out bool isFilled)
+    private string GetFieldValue(FieldModel field)
     {
-        if(CheckFieldValue(ref field))
-        {
-            isFilled = true;
-            return field.Value;
-        }
-        if (!string.IsNullOrEmpty(printContent))
-        {
-            isFilled = true;
-            return printContent;
-        }
-        isFilled = false;
-        return field.Name;
-    }
+        string tempValue = string.Empty;
+        if (string.IsNullOrEmpty(field.Value)) return tempValue;
 
-    private bool CheckFieldValue(ref FieldModel field)
-    {
-        if (string.IsNullOrEmpty(field.Value)) return false;
-        
         if (field.Value.Contains($"[date]"))
         {
             var pattern = $@"\[\bdate\b\]";
             var replace = DateTime.Now.ToString("dd.MM.yyyy");
             string result = Regex.Replace(field.Value, pattern, replace);
-            field.Value = result;
+            tempValue = result;
         }
 
-        return true;
+        return tempValue;
     }
 
 
-    public static string GetPropValue(PrintContent? pc, string propName)
+    public static string GetPropValueFromPrintContent(PrintContent pc, string propName)
     {
         if (pc == null) return "";
         var propval = pc.GetType().GetProperty(propName).GetValue(pc, null);
