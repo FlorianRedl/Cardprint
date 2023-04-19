@@ -61,7 +61,7 @@ public partial class MainWindowViewModel
     public PrintContent selectedPrintContent;
     partial void OnSelectedPrintContentChanged(PrintContent value)
     {
-        View = GetCanvas(selectedPrintContent, SelectedLayout);
+        SetView();
     }
     [ObservableProperty]
     public string printStatus;
@@ -161,7 +161,11 @@ public partial class MainWindowViewModel
     [RelayCommand]
     private void RefreshView()
     {
-        View = GetCanvas(selectedPrintContent, SelectedLayout);
+        var t = printContentList;
+
+
+
+        View = CanvasHelper.GetViewCard(new Dictionary<string, string>(), SelectedLayout, ViewSize);
     }
 
     [RelayCommand]
@@ -176,7 +180,6 @@ public partial class MainWindowViewModel
         {
             PrintHelper.Print(GetCanvas(item, SelectedLayout));
         }
-        
 
     }
     private void LoadLayout(string layoutName)
@@ -192,7 +195,7 @@ public partial class MainWindowViewModel
             MessageBox.Show("incorrect layout!" + "\n \n" + $"{error}", "error", MessageBoxButton.OK, MessageBoxImage.Warning);
             return;
         }
-        SetView(SelectedLayout);
+        SetView();
         SetNewPrintContent(SelectedLayout);
     }
 
@@ -208,26 +211,11 @@ public partial class MainWindowViewModel
         if (!LayoutNames.Any()) { MessageBox.Show("No Layouts found!" + "\n \n" + $"Path: {LayoutPath}", "error", MessageBoxButton.OK, MessageBoxImage.Information); }
     }
 
-    private void LoadView(LayoutModel layout)
+   
+    private void SetView()
     {
-        if (layout == null) return;
-        string error;
-        if (!layout.IsValide(out error))
-        {
-            ClearView();
-            ClearPrintContent();
-            MessageBox.Show("incorrect layout!" + "\n \n" + $"{error}","error",MessageBoxButton.OK, MessageBoxImage.Warning);
-            return;
-        }
-        SetView(layout);
-        SetNewPrintContent(layout);
-    }
-    private void SetView(LayoutModel layout)
-    {
-
-        ViewBackground = GetViewBackground(layout);
-        View = GetCanvas(null, layout);
-
+        ViewBackground = CanvasHelper.GetViewBackground(SelectedLayout,ViewSize);
+        View = GetCanvas(null, SelectedLayout);
     }
     
     private void ClearView()
@@ -248,28 +236,6 @@ public partial class MainWindowViewModel
     {
         PrintContentList.Clear();
         OnSelectedLayoutChanges?.Invoke(null);
-    }
-
-
-    private Canvas GetViewBackground(LayoutModel layout)
-    {
-        Canvas canvas = new();
-
-        var width = Calc.MillimeterToPixel(layout.FormatSize.height, ViewSize) ;
-        var height = Calc.MillimeterToPixel(layout.FormatSize.width, ViewSize) ;
-        canvas.Width = width;
-        canvas.Height = height;
-
-        Border border = new Border();
-        border.BorderThickness = new System.Windows.Thickness(2);
-        border.BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#A2A2A2"));
-        border.CornerRadius = new System.Windows.CornerRadius(15);
-        border.Width = width;
-        border.Height = height;
-
-        canvas.Children.Add(border);
-        return canvas;
-
     }
 
 
@@ -305,6 +271,19 @@ public partial class MainWindowViewModel
 
     }
 
+    private Dictionary<string,string> GetFieldValues()
+    {
+        Dictionary<string, string> fieldValues = new();
+
+        foreach (var printContent in printContentList)
+        {
+
+
+        }
+        return fieldValues;
+    }
+
+
     private string GetFieldText(FieldModel field, string printContent, out bool isFilled)
     {
         if(CheckFieldValue(ref field))
@@ -324,7 +303,6 @@ public partial class MainWindowViewModel
     private bool CheckFieldValue(ref FieldModel field)
     {
         if (string.IsNullOrEmpty(field.Value)) return false;
-
         
         if (field.Value.Contains($"[date]"))
         {
@@ -334,7 +312,6 @@ public partial class MainWindowViewModel
             field.Value = result;
         }
 
-        
         return true;
     }
 

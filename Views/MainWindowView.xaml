@@ -8,10 +8,10 @@
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance Type=vm:MainWindowViewModel}"
         Title="CardPrint" 
-        Height="420" 
-        Width="1000"
-        MinHeight="420"
-        MinWidth="1000"
+        Height="450" 
+        Width="1100"
+        MinHeight="450"
+        MinWidth="1100"
         WindowStartupLocation="CenterScreen"
         FontSize="14"
         Loaded="Window_Loaded"
@@ -37,7 +37,7 @@
                 <MenuItem Header="Settings" Command="{Binding OpenSettingsCommand}"></MenuItem>
                 <MenuItem Header="Open Layouts" Command="{Binding OpenLayoutFolderCommand}"></MenuItem>
                 <MenuItem Header="About CardPrint" Command="{Binding OpenGithubCardPrintCommand}" ></MenuItem>
-                <MenuItem Header="About flr-studios" Command="{Binding OpenFlrStudiosCommand}" ></MenuItem>
+                <MenuItem Header="About FLR-Studios" Command="{Binding OpenFlrStudiosCommand}" ></MenuItem>
             </MenuItem>
         </Menu>
         <StackPanel Grid.Row="1" VerticalAlignment="Bottom" Margin="10,0,10,0">
