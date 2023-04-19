@@ -158,8 +158,6 @@ public partial class MainWindowViewModel
         var url = "https://www.flr-studios.at";
         Process.Start("explorer.exe", url);
     }
-   
-
     [RelayCommand]
     private void Print()
     {
@@ -170,7 +168,7 @@ public partial class MainWindowViewModel
 
         foreach (var item in PrintContentList)
         {
-            PrintHelper.Print(GetCanvas(item, SelectedLayout));
+            PrintHelper.Print(CanvasHelper.GetViewCard(GetFieldValues(SelectedPrintContent, SelectedLayout), SelectedLayout, ViewSize));
         }
 
     }

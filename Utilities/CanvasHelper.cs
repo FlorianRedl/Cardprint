@@ -45,6 +45,7 @@ static class CanvasHelper
         var height = Calc.MillimeterToPixel(layout.FormatSize.width, viewSize);
         canvas.Width = width;
         canvas.Height = height;
+        canvas.Arrange(new Rect(new Size(width, height)));
 
         int fieldIndex = 1;
         foreach (var field in layout.Fields)
