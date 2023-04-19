@@ -229,38 +229,6 @@ public partial class MainWindowViewModel
     }
 
 
-    private Canvas GetCanvas(PrintContent? printContent, LayoutModel layout)
-    {
-        if (layout == null) return new Canvas();
-        var canvas = new Canvas();
-        var width = Calc.MillimeterToPixel(layout.FormatSize.height, ViewSize);
-        var height = Calc.MillimeterToPixel(layout.FormatSize.width, ViewSize);
-        canvas.Width = width;
-        canvas.Height = height;
-        canvas.Arrange(new Rect(new Size(width,height)));
-
-        int fieldIndex = 1;
-        foreach (var field in layout.Fields)
-        {
-            Label label = new Label();
-
-            var lableText = ""; //GetFieldText(field, GetPropValue(printContent, $"Field{fieldIndex}"),out bool isFilled);
-            //label.Foreground = isFilled ? new SolidColorBrush(Colors.Black) : new SolidColorBrush(Colors.LightGray);
-            label.Content = lableText;
-            label.FontSize = field.Size;
-            label.Padding = new Thickness(0);
-            canvas.Children.Add(label);
-            var x = Calc.MillimeterToPixel(field.XCord, ViewSize);
-            var y = Calc.MillimeterToPixel(field.YCord, ViewSize);
-            Canvas.SetLeft(label, x);
-            Canvas.SetTop(label, y);
-            fieldIndex++;
-        }
-
-        return canvas;
-
-    }
-
     private Dictionary<string,string> GetFieldValues(PrintContent printContent,LayoutModel layout)
     {
         Dictionary<string, string> fieldValues = new();
