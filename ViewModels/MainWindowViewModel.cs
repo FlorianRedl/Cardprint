@@ -76,7 +76,7 @@ public partial class MainWindowViewModel
         printContentHeaders = new List<string>();
         printContentList = new ObservableCollection<PrintContent>();
 
-        timer.Interval = TimeSpan.FromMilliseconds(200);
+        timer.Interval = TimeSpan.FromMilliseconds(100);
         timer.Tick += Timer_Tick;
         
     }
@@ -149,7 +149,7 @@ public partial class MainWindowViewModel
 
         foreach (var item in PrintContentList)
         {
-            PrintHelper.Print(CanvasHelper.GetViewCard(GetFieldValues(SelectedPrintContent, SelectedLayout), SelectedLayout, ViewSize));
+            PrintHelper.Print(CanvasHelper.GetViewCard(GetFieldValues(item, SelectedLayout), SelectedLayout, ViewSize, false));
         }
 
     }
@@ -186,7 +186,7 @@ public partial class MainWindowViewModel
     private void SetView()
     {
         ViewBackground = CanvasHelper.GetViewBackground(SelectedLayout,ViewSize);
-        View = CanvasHelper.GetViewCard(GetFieldValues(SelectedPrintContent, SelectedLayout), SelectedLayout, ViewSize);
+        View = CanvasHelper.GetViewCard(GetFieldValues(SelectedPrintContent, SelectedLayout), SelectedLayout, ViewSize, true);
     }
     
     private void ClearView()
