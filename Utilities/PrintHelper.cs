@@ -22,12 +22,20 @@ static public class PrintHelper
 
     public static void Print(Canvas pCanvas)
     {
-        PrintDialog pd = new PrintDialog();
-        PrintQueue queue = new LocalPrintServer().GetPrintQueue(Settings.Default.SelectedPrinter);
-        pd.PrintQueue = queue;
+        try
+        {
+            PrintDialog pd = new PrintDialog();
+            PrintQueue queue = new LocalPrintServer().GetPrintQueue(Settings.Default.SelectedPrinter);
+            pd.PrintQueue = queue;
        
-        //var pCanvas = GetCanvas(SelectedPrintContent, SelectedLayout);
-        pd.PrintVisual(pCanvas, "printing Card");
+            //var pCanvas = GetCanvas(SelectedPrintContent, SelectedLayout);
+            pd.PrintVisual(pCanvas, "printing Card");
+
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show("incorrect layout!" + "\n \n" + $"{ex.Message}", "error", MessageBoxButton.OK, MessageBoxImage.Warning);
+        }
 
     }
 
