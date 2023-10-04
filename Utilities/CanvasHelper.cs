@@ -37,7 +37,7 @@ static class CanvasHelper
         return canvas;
 
     }
-    public static Canvas GetViewCard(Dictionary<string,string> fieldValues, LayoutModel layout, double viewSize, bool emptyFieldsVisible)
+    public static Canvas GetCanvas(Dictionary<string,string> fieldValues, LayoutModel layout, double viewSize, bool fieldNamesDisplayed)
     {
         if (layout == null) return new Canvas();
 
@@ -51,7 +51,7 @@ static class CanvasHelper
         int fieldIndex = 1;
         foreach (var field in layout.Fields)
         {
-            if (!emptyFieldsVisible && !fieldValues.ContainsKey(field.Name)) continue;
+            if(!fieldNamesDisplayed && !fieldValues.ContainsKey(field.Name)) continue;
 
             Label label = new Label();
 

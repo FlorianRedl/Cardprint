@@ -149,7 +149,9 @@ public partial class MainWindowViewModel
 
         foreach (var item in PrintContentList)
         {
-            PrintHelper.Print(CanvasHelper.GetViewCard(GetFieldValues(item, SelectedLayout), SelectedLayout, ViewSize, false));
+            var fieldValues = GetFieldValues(item, SelectedLayout); 
+            var canvas = CanvasHelper.GetCanvas(fieldValues,SelectedLayout, ViewSize, false);
+            PrintHelper.Print(canvas);
         }
 
     }
@@ -186,7 +188,8 @@ public partial class MainWindowViewModel
     private void SetView()
     {
         ViewBackground = CanvasHelper.GetViewBackground(SelectedLayout,ViewSize);
-        View = CanvasHelper.GetViewCard(GetFieldValues(SelectedPrintContent, SelectedLayout), SelectedLayout, ViewSize, true);
+        var fieldValues = GetFieldValues(SelectedPrintContent, SelectedLayout);
+        View = CanvasHelper.GetCanvas(fieldValues, SelectedLayout, ViewSize,true);
     }
     
     private void ClearView()
@@ -216,16 +219,18 @@ public partial class MainWindowViewModel
         int fieldIndex = 1;
         foreach (var field in layout.Fields)
         {
-            var fieldValue = GetFieldValue(field);
+            var fieldValue = FieldValueAttributeHandler.CheckAndReplace(field);
             if (!string.IsNullOrEmpty(fieldValue))
             {
                 fieldValues.Add(field.Name, fieldValue);
             }
+
             var propValue = GetPropValueFromPrintContent(printContent,$"Field{fieldIndex}");
             if (!string.IsNullOrEmpty(propValue)) 
             {
                 fieldValues.Add(field.Name, propValue);
             }
+
 
             fieldIndex++;
         }
@@ -233,28 +238,13 @@ public partial class MainWindowViewModel
         return fieldValues;
     }
 
-    private string GetFieldValue(FieldModel field)
-    {
-        string tempValue = string.Empty;
-        if (string.IsNullOrEmpty(field.Value)) return tempValue;
-
-        if (field.Value.Contains($"[date]"))
-        {
-            var pattern = $@"\[\bdate\b\]";
-            var replace = DateTime.Now.ToString("dd.MM.yyyy");
-            string result = Regex.Replace(field.Value, pattern, replace);
-            tempValue = result;
-        }
-
-        return tempValue;
-    }
 
     public static string GetPropValueFromPrintContent(PrintContent pc, string propName)
     {
         if (pc == null) return "";
-        var propval = pc.GetType().GetProperty(propName).GetValue(pc, null);
-        if(propval != null) return propval.ToString();
-        return "";
+        var propval = pc.GetType().GetProperty(propName)?.GetValue(pc, null);
+        if (propval == null) return "";
+        return propval.ToString()!;
     }
     private void Timer_Tick(object? sender, EventArgs e)
     {

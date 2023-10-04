@@ -8,9 +8,6 @@
     <Setting Name="PrintScale" Type="System.Double" Scope="User">
       <Value Profile="(Default)">1</Value>
     </Setting>
-    <Setting Name="ViewSize" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">1</Value>
-    </Setting>
     <Setting Name="LayoutPath" Type="System.String" Scope="User">
       <Value Profile="(Default)">C:\Program Files (x86)\Cardprint\Layouts</Value>
     </Setting>
@@ -19,6 +16,9 @@
     </Setting>
     <Setting Name="PrinterOffsetY" Type="System.Double" Scope="User">
       <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="ViewSize" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">1.2</Value>
     </Setting>
   </Settings>
 </SettingsFile>

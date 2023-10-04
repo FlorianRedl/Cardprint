@@ -12,7 +12,6 @@ using System.ComponentModel.DataAnnotations;
 using System.Xml.Linq;
 using Cardprint.Utilities;
 using Cardprint.Models;
-using static System.Windows.Forms.DataFormats;
 using Format = Cardprint.Models.Format;
 using System.Windows.Threading;
 using System.Printing;

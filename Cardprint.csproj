@@ -7,7 +7,16 @@
     <UseWPF>true</UseWPF>
     <UseWindowsForms>true</UseWindowsForms>
     <ApplicationIcon>Assets\CardPrint.ico</ApplicationIcon>
+    <FileVersion>0.1.1</FileVersion>
+    <AssemblyVersion>0.1.1</AssemblyVersion>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Screenshots\**" />
+    <EmbeddedResource Remove="Screenshots\**" />
+    <None Remove="Screenshots\**" />
+    <Page Remove="Screenshots\**" />
+  </ItemGroup>
 
   <ItemGroup>
     <Compile Remove="MyClassBuilder.cs" />
