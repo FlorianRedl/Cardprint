@@ -82,6 +82,7 @@ public static class DataAccess
 
                 var path = image.SelectSingleNode("path")?.InnerText;
                 if (path is null) continue; // meldung
+                if(!File.Exists(path)) continue; //meldung
 
                 fields.Add(new ImageFieldModel(name, xCord, yCord, width, height, path));
             }
