@@ -25,3 +25,31 @@ Minimalist Tool to print SmartCards with predefined fields that can be dynamical
 
 ### Settings
 ![Settings View](https://raw.githubusercontent.com/FlorianRedl/Cardprint/master/Screenshots/CardPrint_Settings.PNG)
+
+example layout file:
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<layout>
+    <format>ID-1</format>
+    <image>
+        <name>image1</name>
+        <path>C:\temp\br.jpg</path>
+        <x>30</x>
+        <y>5</y>
+        <height>50</height>
+    </image>
+    <text>
+        <name>Field 1</name>
+        <x>10</x>
+        <y>30</y>
+        <size>20</size>
+    </text>
+    <text>
+        <name>Fiedl 2</name>
+        <value>[date] / static testvalue</value>
+        <x>8</x>
+        <y>48</y>
+        <size>12</size>
+    </text>
+</layout>
+```
