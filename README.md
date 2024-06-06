@@ -19,7 +19,7 @@ Minimalist Tool to print SmartCards with predefined fields that can be dynamical
 
 
 ### Main View
-![Main View1](https://raw.githubusercontent.com/FlorianRedl/Cardprint/master/Screenshots/CardPrint1.PNG)
+![Main View1](https://raw.githubusercontent.com/FlorianRedl/Cardprint/master/Screenshots/CardPrintNew1.PNG)
 
 ![Main View2](https://raw.githubusercontent.com/FlorianRedl/Cardprint/master/Screenshots/CardPrint3.PNG)
 
