@@ -9,7 +9,10 @@ Minimalist Tool to print SmartCards with predefined fields that can be dynamical
 - Load data from a csv Files
 - Print a single or multiple Cards
 
-
+### Field types :
+- text
+- image
+  
 ### Supportet Formats:
 - ID-1 (85.60 mm, 53.98 mm)
 - ID-2 (105.00 mm, 74.00 mm)
