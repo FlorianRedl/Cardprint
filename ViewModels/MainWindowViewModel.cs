@@ -44,7 +44,7 @@ public partial class MainWindowViewModel
     [ObservableProperty]
     public string selectedLayoutName;
     [ObservableProperty]
-    public LayoutModel selectedLayout;
+    public LayoutModel? selectedLayout;
     [ObservableProperty]
     public ObservableCollection<LayoutModel> layouts;
     partial void OnSelectedLayoutNameChanging(string value)
@@ -76,9 +76,10 @@ public partial class MainWindowViewModel
         printContentHeaders = new List<string>();
         printContentList = new ObservableCollection<PrintContent>();
 
-        timer.Interval = TimeSpan.FromMilliseconds(100);
+        timer.Interval = TimeSpan.FromMilliseconds(250);
         timer.Tick += Timer_Tick;
-        
+        timer.Start();
+
     }
 
     [RelayCommand]
@@ -142,7 +143,7 @@ public partial class MainWindowViewModel
     [RelayCommand]
     private void Print()
     {
-        timer.Start();
+        
 
         var result = MessageBox.Show($"Do you want to print {PrintContentList.Count()} Cards?", "Print", MessageBoxButton.YesNo);
         if(result == MessageBoxResult.No) { return; }
@@ -159,9 +160,10 @@ public partial class MainWindowViewModel
     {
         if (string.IsNullOrEmpty(layoutName)) return;
 
-        SelectedLayout = DataAccess.GetLayout(LayoutPath, layoutName);
         string error;
-        if (!SelectedLayout.IsValide(out error))
+        SelectedLayout = DataAccess.GetLayout(LayoutPath, layoutName, out error);
+
+        if (SelectedLayout is null)
         {
             ClearView();
             ClearPrintContent();
@@ -194,15 +196,18 @@ public partial class MainWindowViewModel
     
     private void ClearView()
     {
+        if(View == null || ViewBackground == null) return;
         View.Children.Clear();
         ViewBackground.Children.Clear();
-        
     }
 
     private void SetNewPrintContent(LayoutModel layout)
     {
         PrintContentList.Clear();
-        printContentHeaders = layout.Fields.Where(s=> string.IsNullOrEmpty(s.Value)).Select(s => s.Name).ToList();
+
+        var textfields =  layout.Fields.Where(s => s.GetType() == typeof(TextFieldModel)).Cast<TextFieldModel>().ToList(); 
+
+        printContentHeaders = textfields.Where(s=> s.GetType() == typeof(TextFieldModel) & string.IsNullOrEmpty(s.Text)).Select(s => s.Name).ToList();
         OnSelectedLayoutChanges?.Invoke(printContentHeaders.ToArray());
         PrintContentList.Add(new PrintContent());
     }
@@ -220,6 +225,7 @@ public partial class MainWindowViewModel
         foreach (var field in layout.Fields)
         {
             var fieldValue = FieldValueAttributeHandler.CheckAndReplace(field);
+
             if (!string.IsNullOrEmpty(fieldValue))
             {
                 fieldValues.Add(field.Name, fieldValue);
@@ -254,7 +260,6 @@ public partial class MainWindowViewModel
         if (n <= 0)
         {
             PrintStatus = "";
-            timer.Stop();
             return;
         };
         PrintStatus = $"Printqueue: {n}";

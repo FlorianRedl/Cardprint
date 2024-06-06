@@ -9,6 +9,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows;
 using System.Windows.Shapes;
+using System.Windows.Media.Imaging;
 
 namespace Cardprint.Views;
 
@@ -51,28 +52,52 @@ static class CanvasHelper
         int fieldIndex = 1;
         foreach (var field in layout.Fields)
         {
-            if(!fieldNamesDisplayed && !fieldValues.ContainsKey(field.Name)) continue;
+            var x = MillimeterToPixel(field.XCord, viewSize);
+            var y = MillimeterToPixel(field.YCord, viewSize);
 
-            Label label = new Label();
-
-            if (fieldValues.ContainsKey(field.Name))
+            if (field is TextFieldModel textField)
             {
-                label.Foreground = new SolidColorBrush(Colors.Black);
-                label.Content = fieldValues[field.Name];
+                if(!fieldNamesDisplayed && !fieldValues.ContainsKey(field.Name)) continue;
+                Label label = new Label();
+                if (fieldValues.ContainsKey(field.Name))
+                {
+                    label.Foreground = new SolidColorBrush(Colors.Black);
+                    label.Content = fieldValues[field.Name];
+                }
+                else
+                {
+                    label.Foreground = new SolidColorBrush(Colors.LightGray);
+                    label.Content = field.Name;
+                }
+
+                label.FontSize = textField.Size;
+                label.Padding = new Thickness(0);
+                
+                canvas.Children.Add(label);
+                Canvas.SetLeft(label, x);
+                Canvas.SetTop(label, y);
+
+            }
+            else if (field is ImageFieldModel imageField)
+            {
+                Image image = new Image();
+                image.Source = new BitmapImage(new Uri(imageField.Path));
+
+                if(imageField.Width != 0) image.Width = imageField.Width;
+                if(imageField.Height != 0) image.Height = imageField.Height;
+                image.Stretch = Stretch.Uniform;
+                canvas.Children.Add(image);
+                Canvas.SetZIndex(image, -1);
+                Canvas.SetLeft(image, x);
+                Canvas.SetTop(image, y);
             }
             else
             {
-                label.Foreground = new SolidColorBrush(Colors.LightGray);
-                label.Content = field.Name;
+                
             }
 
-            label.FontSize = field.Size;
-            label.Padding = new Thickness(0);
-            canvas.Children.Add(label);
-            var x = MillimeterToPixel(field.XCord, viewSize);
-            var y = MillimeterToPixel(field.YCord, viewSize);
-            Canvas.SetLeft(label, x);
-            Canvas.SetTop(label, y);
+
+            
             fieldIndex++;
         }
 

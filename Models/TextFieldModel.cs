@@ -1,23 +1,20 @@
 ﻿namespace Cardprint.Models;
 
-public class FieldModel
+public class TextFieldModel :IField
 {
     public string Name { get; set; }
     public double XCord { get; set; }
     public double YCord { get; set; }
     public double Size { get; set; }
-    public string Value { get; set; }
+    public string? Text { get; set; }
 
-    public FieldModel(string name, int xCord, int yCord, double size, string value)
+    public TextFieldModel(string name, double xCord, double yCord, double size, string? text)
     {
         Name = name;
         XCord = xCord;
         YCord = yCord;
         Size = size;
-        Value = value;
+        Text = text;
     }
-    public FieldModel()
-    {
-
-    }
+    
 }

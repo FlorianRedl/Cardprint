@@ -54,7 +54,7 @@ internal partial class SettingsViewModel : ObservableValidator
         get => offsetY;
         set => SetProperty(ref offsetY, value, true);
     }
-    private DispatcherTimer timer = new DispatcherTimer();
+    private DispatcherTimer _timer;
 
     public SettingsViewModel()
     {
@@ -70,9 +70,9 @@ internal partial class SettingsViewModel : ObservableValidator
             new Format("A4", 210.00, 297.00)
 
         };
-
-        timer.Interval = TimeSpan.FromMilliseconds(250);
-        timer.Tick += Timer_Tick; ;
+        _timer = new DispatcherTimer();
+        _timer.Interval = TimeSpan.FromMilliseconds(250);
+        _timer.Tick += Timer_Tick; ;
         
 
         SelectedFormat = Formats.FirstOrDefault();
@@ -117,7 +117,7 @@ internal partial class SettingsViewModel : ObservableValidator
     [RelayCommand]
     private void TestPrint()
     {
-        timer.Start();
+        _timer.Start();
         PrintHelper.Print(CanvasHelper.GetTestPrintCanvas(SelectedFormat,OffsetX, OffsetY,PrintScale));
     }
 

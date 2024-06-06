@@ -10,22 +10,33 @@ namespace Cardprint.Utilities;
 
 static class FieldValueAttributeHandler
 {
-    public static string CheckAndReplace(FieldModel field)
+    public static string CheckAndReplace(IField field)
     {
-        string tempValue = field.Value;
-        if (string.IsNullOrEmpty(field.Value)) return tempValue;
+        if (field is TextFieldModel textfield)
+        {
+            if (string.IsNullOrEmpty(textfield.Text)) return "";
 
-        if (field.Value.Contains($"[date]"))
-        {
+            string tempValue = textfield.Text;
+
+            if (textfield.Text.Contains($"[date]"))
+            {
             
-            tempValue = tempValue.Replace("[date]", DateTime.Now.ToString("dd.MM.yyyy"));
+                tempValue = tempValue.Replace("[date]", DateTime.Now.ToString("dd.MM.yyyy"));
+            }
+            if (textfield.Text.Contains($"[winUser]"))
+            {
+                var username = Environment.UserName;
+                tempValue = tempValue.Replace("[winUser]", username);
+            }
+            return tempValue;
+
         }
-        if (field.Value.Contains($"[winUser]"))
+        else
         {
-            var username = Environment.UserName;
-            tempValue = tempValue.Replace("[winUser]", username);
+            return "";
         }
-        return tempValue;
+
+
     }
 
 

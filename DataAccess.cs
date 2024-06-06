@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Xml;
 using Cardprint.Models;
+using static System.Net.Mime.MediaTypeNames;
 
 
 namespace Cardprint;
@@ -33,40 +34,66 @@ public static class DataAccess
         }
     }
 
-    public static LayoutModel GetLayout(string filePath,string layoutName)
+    public static LayoutModel? GetLayout(string filePath,string layoutName,out string error)
     {
-        XmlDocument doc = new XmlDocument();
-        doc.Load(filePath+"\\"+layoutName+".xml");
-        //var backgroundImg = doc.GetElementsByTagName("backgroundImg").Item(0)?.InnerText;
-        var format = doc.GetElementsByTagName("format").Item(0)?.InnerText;
-        var fields = doc.GetElementsByTagName("field");
-        List<FieldModel> fieldsList = new List<FieldModel>();
-        foreach (XmlNode field in fields)
+        try
         {
-            FieldModel fieldModel = new();
-            foreach (XmlNode item in field.ChildNodes)
+            error = string.Empty;
+            XmlDocument doc = new XmlDocument();
+            doc.Load(filePath+"\\"+layoutName+".xml");
+            var format = doc.GetElementsByTagName("format").Item(0)?.InnerText;
+            var texts = doc.GetElementsByTagName("text");
+            List<IField> fields = new();
+
+            foreach (XmlNode field in texts)
             {
-                switch (item.Name)
-                {
-                    case "name":
-                        fieldModel.Name = item.InnerText;
-                        break;
-                    case "x":
-                        fieldModel.XCord = double.Parse(item.InnerText);
-                        break;
-                    case "y":
-                        fieldModel.YCord = double.Parse(item.InnerText);
-                        break;
-                    case "size":
-                        fieldModel.Size = double.Parse(item.InnerText);
-                        break;
-                    case "value":
-                        fieldModel.Value = item.InnerText;
-                        break;
-                }
+                var name = field.SelectSingleNode("name")?.InnerText;
+                if (name is null) continue;
+                var x = field.SelectSingleNode("x")?.InnerText;
+                var xCord = x is null ? 0 : double.Parse(x);
+
+                var y = field.SelectSingleNode("y")?.InnerText;
+                var yCord = y is null ? 0 : double.Parse(y);
+
+                var s = field.SelectSingleNode("size")?.InnerText;
+                var size = s is null ? 0 : double.Parse(s);
+
+                var value = field.SelectSingleNode("value")?.InnerText;
+
+                fields.Add(new TextFieldModel(name,xCord,yCord,size,value));
             }
-            fieldsList.Add(fieldModel);
+
+            var images = doc.GetElementsByTagName("image");
+            foreach (XmlNode image in images)
+            {
+                var name = image.SelectSingleNode("name")?.InnerText;
+                if (name is null) continue; //Meldung
+                var x = image.SelectSingleNode("x")?.InnerText;
+                var xCord = x is null ? 0 : double.Parse(x);
+
+                var y = image.SelectSingleNode("y")?.InnerText;
+                var yCord = y is null ? 0 : double.Parse(y);
+
+                var w = image.SelectSingleNode("width")?.InnerText;
+                var width = w is null ? 0 : double.Parse(w);
+
+                var h = image.SelectSingleNode("height")?.InnerText;
+                var height = h is null ? 0 : double.Parse(h);
+
+                var path = image.SelectSingleNode("path")?.InnerText;
+                if (path is null) continue; // meldung
+
+                fields.Add(new ImageFieldModel(name, xCord, yCord, width, height, path));
+            }
+
+            return new LayoutModel(layoutName, format, fields);
+
         }
-        return new LayoutModel(layoutName, format, fieldsList);
+        catch (Exception ex)
+        {
+            error = ex.Message; 
+            return null;
+            
+        }
     }
 }

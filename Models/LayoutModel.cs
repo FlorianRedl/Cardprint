@@ -15,16 +15,16 @@ public partial class LayoutModel : ObservableObject
 
     public (double width,double height) FormatSize { get { return GetFormatSize(); } }
 
-    public List<FieldModel> Fields { get; set; }
+    public List<IField> Fields { get; set; }
 
 
-    public bool IsValide(out string error)
-    {
-        error= string.Empty;
-        if (Format == null) { error = "missing Format"; return false; };
-        if (Fields.Count == 0) { error = "no fields"; return false; };
-        return true;
-    }
+    //public bool IsValide(out string error)
+    //{
+    //    error= string.Empty;
+    //    if (Format == null) { error = "missing Format"; return false; };
+    //    if (Fields.Count == 0) { error = "no fields"; return false; };
+    //    return true;
+    //}
 
     private (double width, double height) GetFormatSize()
     {
@@ -38,7 +38,7 @@ public partial class LayoutModel : ObservableObject
         }
     }
 
-    public LayoutModel(string layoutName,string? format, List<FieldModel> fields)
+    public LayoutModel(string layoutName,string? format, List<IField> fields)
     {
         LayoutName = layoutName;
         Fields = fields;
