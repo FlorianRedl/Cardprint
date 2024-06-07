@@ -83,8 +83,8 @@ static class CanvasHelper
                 Image image = new Image();
                 image.Source = new BitmapImage(new Uri(imageField.Path));
 
-                if(imageField.Width != 0) image.Width = imageField.Width;
-                if(imageField.Height != 0) image.Height = imageField.Height;
+                if(imageField.Width != 0) image.Width = MillimeterToPixel(imageField.Width, viewSize);
+                if(imageField.Height != 0) image.Height = MillimeterToPixel(imageField.Height, viewSize);
                 image.Stretch = Stretch.Uniform;
                 canvas.Children.Add(image);
                 Canvas.SetZIndex(image, -1);
