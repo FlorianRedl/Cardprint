@@ -25,7 +25,7 @@ __Versatile Printing Options:__ Print individual cards or entire batches with ju
 - Personalized gift cards
 
 
-![Main View1](https://raw.githubusercontent.com/FlorianRedl/Cardprint/master/Screenshots/CardprintImg1.JPG)
+![Main View1](https://raw.githubusercontent.com/FlorianRedl/Cardprint/master/Screenshots/MainView1.png)
 
 
 ## Getting Started:
@@ -54,20 +54,26 @@ __Versatile Printing Options:__ Print individual cards or entire batches with ju
 <layout>
     <format>ID-1</format>
     <image>
-        <name>image1</name>
-        <path>C:\temp\image1.jpg</path>
-        <x>30</x>
-        <y>5</y>
-        <height>50</height>
+        <name>Logo</name>
+        <path>C:\temp\FLR Logo.png</path>
+        <x>55</x>
+        <y>8</y>
+        <height>25</height>
     </image>
     <text>
-        <name>Field 1</name>
-        <x>10</x>
-        <y>30</y>
+        <name>Name</name>
+        <x>8</x>
+        <y>8</y>
         <size>20</size>
     </text>
     <text>
-        <name>Field 2</name>
+        <name>CID</name>
+        <x>8</x>
+        <y>15</y>
+        <size>14</size>
+    </text>
+    <text>
+        <name>Field 3</name>
         <value>[date] / static testvalue</value>
         <x>8</x>
         <y>48</y>
