@@ -227,13 +227,14 @@ public partial class MainWindowViewModel
         Dictionary<string, string> fieldValues = new();
 
         int fieldIndex = 1;
-        foreach (var field in layout.Fields)
+        foreach (var field in layout.Fields.OfType<TextFieldModel>())
         {
-            var fieldValue = FieldValueAttributeHandler.CheckAndReplace(field);
+            var fieldValue = FieldValueAttributeHandler.CheckAndReplaceTextValue(field);
 
             if (!string.IsNullOrEmpty(fieldValue))
             {
                 fieldValues.Add(field.Name, fieldValue);
+                continue;
             }
 
             var propValue = GetPropValueFromPrintContent(printContent,$"Field{fieldIndex}");
