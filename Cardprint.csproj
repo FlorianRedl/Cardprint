@@ -11,12 +11,6 @@
     <ProductVersion>0.1.2</ProductVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Remove="Screenshots\**" />
-    <EmbeddedResource Remove="Screenshots\**" />
-    <None Remove="Screenshots\**" />
-    <Page Remove="Screenshots\**" />
-  </ItemGroup>
-  <ItemGroup>
     <Compile Remove="MyClassBuilder.cs" />
   </ItemGroup>
   <ItemGroup>
