@@ -25,7 +25,7 @@ __Versatile Printing Options:__ Print individual cards or entire batches with ju
 - Personalized gift cards
 
 
-![Main View1](https://raw.githubusercontent.com/FlorianRedl/Cardprint/master/Screenshots/MainView1.JPG)
+![Main View1](https://raw.githubusercontent.com/FlorianRedl/Cardprint/master/Screenshots/MainView1.png)
 
 
 ## Getting Started:
