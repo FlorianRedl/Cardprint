@@ -32,7 +32,7 @@ public partial class LayoutModel : ObservableObject
         switch (Format)
         {
             case "ID-0":
-                return (15, 82);
+                return (15, 25);
             case "ID-1":
                 return (53.98, 85.60);
             case "ID-2":

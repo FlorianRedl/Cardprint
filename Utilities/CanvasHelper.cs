@@ -22,8 +22,8 @@ static class CanvasHelper
     {
         Canvas canvas = new();
 
-        var width = MillimeterToPixel(layout.FormatSize.height, viewSize);
-        var height = MillimeterToPixel(layout.FormatSize.width, viewSize);
+        var width = MillimeterToPixel(layout.FormatSize.width, viewSize);
+        var height = MillimeterToPixel(layout.FormatSize.height, viewSize);
         canvas.Width = width;
         canvas.Height = height;
 
@@ -43,8 +43,8 @@ static class CanvasHelper
         if (layout == null) return new Canvas();
 
         var canvas = new Canvas();
-        var width = MillimeterToPixel(layout.FormatSize.height, viewSize);
-        var height = MillimeterToPixel(layout.FormatSize.width, viewSize);
+        var width = MillimeterToPixel(layout.FormatSize.width, viewSize);
+        var height = MillimeterToPixel(layout.FormatSize.height, viewSize);
         canvas.Width = width;
         canvas.Height = height;
         canvas.Arrange(new Rect(new Size(width, height)));
