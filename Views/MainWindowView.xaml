@@ -96,11 +96,11 @@
 
 
         <!--ViewBackground-->
-        <Border Grid.Row="3"  Grid.Column="0" Margin="10" ClipToBounds="True" >
+        <Border Grid.Row="3"  Grid.Column="0" Margin="15" ClipToBounds="True" >
             <ContentPresenter  Content="{Binding ViewBackground}"/>
         </Border>
         <!--View-->
-        <Border Grid.Row="2" Grid.RowSpan="2" Grid.Column="0" Margin="15" BorderBrush="#A2A2A2" BorderThickness="1" Background="Transparent" Panel.ZIndex="1" >
+        <Border Grid.Row="2" Grid.RowSpan="2" Grid.Column="0" Margin="15" BorderBrush="#A2A2A2" BorderThickness="1" Background="Transparent" Panel.ZIndex="0" >
             <ContentPresenter  Content="{Binding View}"/>
         </Border>
         <Button Grid.Column="0" Grid.Row="2" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="20" Style="{StaticResource RoundCorner}" Command="{Binding SetViewCommand}" Panel.ZIndex="2" >

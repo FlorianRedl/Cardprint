@@ -194,6 +194,7 @@ public partial class MainWindowViewModel
     [RelayCommand]
     private void SetView()
     {
+        if(SelectedLayout == null) return;
         ViewBackground = CanvasHelper.GetViewBackground(SelectedLayout,ViewSize);
         var fieldValues = GetFieldValues(SelectedPrintContent, SelectedLayout);
         View = CanvasHelper.GetCanvas(fieldValues, SelectedLayout, ViewSize,true);

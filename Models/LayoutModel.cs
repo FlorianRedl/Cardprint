@@ -31,10 +31,16 @@ public partial class LayoutModel : ObservableObject
         if (Format == null) return (0,0); 
         switch (Format)
         {
+            case "ID-0":
+                return (15, 82);
             case "ID-1":
                 return (53.98, 85.60);
+            case "ID-2":
+                return (74, 105);
+            case "ID-3":
+                return (88, 125);
             default:
-                return (5, 5);
+                return (53.98, 85.60);
         }
     }
 

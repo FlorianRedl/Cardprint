@@ -28,7 +28,7 @@ static class CanvasHelper
         canvas.Height = height;
 
         Border border = new Border();
-        border.BorderThickness = new System.Windows.Thickness(2);
+        border.BorderThickness = new System.Windows.Thickness(1);
         border.BorderBrush = GreyBrush;
         border.CornerRadius = new System.Windows.CornerRadius(15);
         border.Width = width;
