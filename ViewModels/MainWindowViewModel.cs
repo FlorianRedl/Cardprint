@@ -49,6 +49,11 @@ public partial class MainWindowViewModel
     public ObservableCollection<LayoutModel> layouts;
     partial void OnSelectedLayoutNameChanging(string value)
     {
+        if(PrintContentList.Count > 1)
+        {
+            //Todo Dialog
+        }
+        
         LoadLayout(value);
     }
 
@@ -151,7 +156,7 @@ public partial class MainWindowViewModel
         foreach (var item in PrintContentList)
         {
             var fieldValues = GetFieldValues(item, SelectedLayout); 
-            var canvas = CanvasHelper.GetCanvas(fieldValues,SelectedLayout, ViewSize, false);
+            var canvas = CanvasHelper.GetCanvas(fieldValues,SelectedLayout, Settings.Default.PrintScale, false);
             PrintHelper.Print(canvas);
         }
 
@@ -254,6 +259,7 @@ public partial class MainWindowViewModel
     }
     private void Timer_Tick(object? sender, EventArgs e)
     {
+        if (string.IsNullOrEmpty(Settings.Default.SelectedPrinter)) return;
         var printQueue = new LocalPrintServer().GetPrintQueue(Settings.Default.SelectedPrinter);
         printQueue.Refresh();
         var n = printQueue.NumberOfJobs;

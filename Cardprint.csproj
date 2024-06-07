@@ -1,8 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0-windows</TargetFramework>
+    <TargetFramework>net8.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
     <UseWindowsForms>true</UseWindowsForms>
@@ -11,18 +10,15 @@
     <AssemblyVersion>0.1.2</AssemblyVersion>
     <ProductVersion>0.1.2</ProductVersion>
   </PropertyGroup>
-
   <ItemGroup>
     <Compile Remove="Screenshots\**" />
     <EmbeddedResource Remove="Screenshots\**" />
     <None Remove="Screenshots\**" />
     <Page Remove="Screenshots\**" />
   </ItemGroup>
-
   <ItemGroup>
     <Compile Remove="MyClassBuilder.cs" />
   </ItemGroup>
-
   <ItemGroup>
     <None Remove="Assets\FLR_Logo.png" />
     <None Remove="Assets\icons8-datei-importieren.png" />
@@ -31,15 +27,12 @@
     <None Remove="Assets\icons8-zeile-löschen.png" />
     <None Remove="Assets\icons8-zeile-oberhalb-einfügen.png" />
   </ItemGroup>
-
   <ItemGroup>
     <Content Include="Assets\CardPrint.ico" />
   </ItemGroup>
-
   <ItemGroup>
     <Resource Include="Assets\icons8-update.png" />
   </ItemGroup>
-
   <ItemGroup>
     <Resource Include="Assets\FLR_Logo.png" />
     <Resource Include="Assets\icons8-datei-importieren.png" />
@@ -47,12 +40,10 @@
     <Resource Include="Assets\icons8-zeile-löschen.png" />
     <Resource Include="Assets\icons8-zeile-oberhalb-einfügen.png" />
   </ItemGroup>
-
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.0.0" />
-    <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
+    <PackageReference Include="System.Drawing.Common" Version="8.0.6" />
   </ItemGroup>
-
   <ItemGroup>
     <Compile Update="Properties\Settings.Designer.cs">
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
@@ -60,12 +51,10 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
   </ItemGroup>
-
   <ItemGroup>
     <None Update="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
-
 </Project>
