@@ -17,30 +17,21 @@ public partial class LayoutModel : ObservableObject
 
     public List<IField> Fields { get; set; }
 
-
-    //public bool IsValide(out string error)
-    //{
-    //    error= string.Empty;
-    //    if (Format == null) { error = "missing Format"; return false; };
-    //    if (Fields.Count == 0) { error = "no fields"; return false; };
-    //    return true;
-    //}
-
     private (double width, double height) GetFormatSize()
     {
         if (Format == null) return (0,0); 
         switch (Format)
         {
             case "ID-0":
-                return (15, 25);
+                return (25, 15);
             case "ID-1":
-                return (53.98, 85.60);
+                return (85.60, 53.98);
             case "ID-2":
-                return (74, 105);
+                return (105, 74);
             case "ID-3":
-                return (88, 125);
+                return (125,88);
             default:
-                return (53.98, 85.60);
+                return (85.60, 53.98);
         }
     }
 
