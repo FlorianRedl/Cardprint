@@ -15,6 +15,7 @@ using Cardprint.Models;
 using Format = Cardprint.Models.Format;
 using System.Windows.Threading;
 using System.Printing;
+using System.Windows;
 
 namespace Cardprint.ViewModels;
 
@@ -22,22 +23,22 @@ namespace Cardprint.ViewModels;
 internal partial class SettingsViewModel : ObservableValidator
 {
     [ObservableProperty]
-    public double viewSize;
+    public double viewSize = new();
     [ObservableProperty]
-    public double printScale;
+    public double printScale = new() ;
     [ObservableProperty]
-    public List<string> printers;
+    public List<string> printers = new();
     [ObservableProperty]
-    public string selectedPrinter;
+    public string selectedPrinter = string.Empty;
     [ObservableProperty]
-    public string layoutPath;
+    public string layoutPath = string.Empty;
 
     [ObservableProperty]
-    public Format selectedFormat;
+    public Format? selectedFormat;
     [ObservableProperty]
-    public List<Format> formats;
+    public List<Format> formats = new();
     [ObservableProperty]
-    public string printerStatus;
+    public string printerStatus = string.Empty;
 
     private double offsetX;
     [Range(-20,20)]
@@ -75,7 +76,7 @@ internal partial class SettingsViewModel : ObservableValidator
         _timer.Tick += Timer_Tick; ;
         
 
-        SelectedFormat = Formats.FirstOrDefault();
+        SelectedFormat = Formats.First();
         printScale = Settings.Default.PrintScale;
         SelectedPrinter = Settings.Default.SelectedPrinter;
         ViewSize = Settings.Default.ViewSize;
@@ -86,7 +87,8 @@ internal partial class SettingsViewModel : ObservableValidator
 
     private void Timer_Tick(object? sender, EventArgs e)
     {
-        PrintQueue queue = new LocalPrintServer().GetPrintQueue(Settings.Default.SelectedPrinter);
+        if (SelectedPrinter == string.Empty) return;
+        PrintQueue queue = new LocalPrintServer().GetPrintQueue(SelectedPrinter);
         queue.Refresh();
         var t = queue.IsPrinting;
         var a = queue.IsBusy;
@@ -117,8 +119,9 @@ internal partial class SettingsViewModel : ObservableValidator
     [RelayCommand]
     private void TestPrint()
     {
+        if (string.IsNullOrEmpty(SelectedPrinter)) { MessageBox.Show("No Printer selected!", "error", MessageBoxButton.OK, MessageBoxImage.Warning); return; }
         _timer.Start();
-        PrintHelper.Print(CanvasHelper.GetTestPrintCanvas(SelectedFormat,OffsetX, OffsetY,PrintScale));
+        PrintHelper.Print(CanvasHelper.GetTestPrintCanvas(SelectedFormat!,OffsetX, OffsetY,PrintScale), SelectedPrinter);
     }
 
     [RelayCommand]

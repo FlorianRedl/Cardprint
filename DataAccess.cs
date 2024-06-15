@@ -34,7 +34,7 @@ public static class DataAccess
         }
     }
 
-    public static LayoutModel? GetLayout(string filePath,string layoutName,out string error)
+    public static LayoutModel? LoadLayout(string filePath,string layoutName,out string error)
     {
         try
         {

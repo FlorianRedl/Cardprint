@@ -30,25 +30,22 @@ namespace Cardprint.ViewModels;
 public partial class MainWindowViewModel 
 {
     //Settings
-    double ViewSize { get { return Settings.Default.ViewSize; } } // 0.1 bis +2
-    // int printResolution { get { return Settings.Default.PrintResolution; } } // nötig ?
-    string LayoutPath { get { return Settings.Default.LayoutPath; } } // nötig ?
+    double _viewSize { get { return Settings.Default.ViewSize; } } // 0.1 bis +2
+    string _layoutPath { get { return Settings.Default.LayoutPath; } } // nötig ?
+    string _selectedPrinter { get { return Settings.Default.SelectedPrinter; } }
 
-    public Action<string[]> OnSelectedLayoutChanges;
+    public Action<string[]?> OnSelectedLayoutChanges;
 
 
 
     //Layouts
     [ObservableProperty]
-    public ObservableCollection<string> layoutNames;
+    public ObservableCollection<string> layoutNames = new();
     [ObservableProperty]
-    public string selectedLayoutName;
-    [ObservableProperty]
-    public LayoutModel? selectedLayout;
-    [ObservableProperty]
-    public ObservableCollection<LayoutModel> layouts;
-    partial void OnSelectedLayoutNameChanging(string value)
+    public string? selectedLayoutName;
+    partial void OnSelectedLayoutNameChanging(string? value)
     {
+        if(string.IsNullOrEmpty(value)) return;
         if(PrintContentList.Count > 1)
         {
             //Todo Dialog
@@ -56,34 +53,35 @@ public partial class MainWindowViewModel
         
         LoadLayout(value);
     }
+    [ObservableProperty]
+    public LayoutModel? selectedLayout;
+    [ObservableProperty]
+    public ObservableCollection<LayoutModel> layouts = new();
 
     [ObservableProperty]
-    public List<string> printContentHeaders;
+    public List<string> printContentHeaders = new();
     [ObservableProperty]
-    public ObservableCollection<PrintContent> printContentList;
+    public ObservableCollection<PrintContent> printContentList = new();
 
     [ObservableProperty]
-    public PrintContent selectedPrintContent;
+    public PrintContent selectedPrintContent = new();
     partial void OnSelectedPrintContentChanged(PrintContent value)
     {
         SetView();
     }
     [ObservableProperty]
-    public string printStatus;
+    public string printStatus = string.Empty;
     [ObservableProperty]
-    public Canvas view;
+    public Canvas view = new();
     [ObservableProperty]
-    public Canvas viewBackground;
+    public Canvas viewBackground = new();
 
-    private DispatcherTimer timer = new DispatcherTimer();
+    private DispatcherTimer _printerCheckTimer = new();
     public MainWindowViewModel()
     {
-        printContentHeaders = new List<string>();
-        printContentList = new ObservableCollection<PrintContent>();
-
-        timer.Interval = TimeSpan.FromMilliseconds(250);
-        timer.Tick += Timer_Tick;
-        timer.Start();
+        _printerCheckTimer.Interval = TimeSpan.FromMilliseconds(250);
+        _printerCheckTimer.Tick += Timer_Tick;
+        _printerCheckTimer.Start();
 
     }
 
@@ -119,6 +117,7 @@ public partial class MainWindowViewModel
     private void OpenSettings()
     {
         var win = new SettingsView();
+        win.Owner = Application.Current.MainWindow;
         win.Show();
         win.Closed += Settings_Closed;
     }
@@ -131,7 +130,7 @@ public partial class MainWindowViewModel
     [RelayCommand]
     private void OpenLayoutFolder()
     {
-        Process.Start("explorer.exe",LayoutPath);
+        Process.Start("explorer.exe",_layoutPath);
     }
     [RelayCommand]
     private void OpenGithubCardPrint()
@@ -148,8 +147,8 @@ public partial class MainWindowViewModel
     [RelayCommand]
     private void Print()
     {
-        
-
+        if(string.IsNullOrEmpty(_selectedPrinter)) { MessageBox.Show("No Printer selected!", "error", MessageBoxButton.OK, MessageBoxImage.Warning); return; }
+        if(SelectedLayout == null) { MessageBox.Show("No Layout selected!", "error", MessageBoxButton.OK, MessageBoxImage.Warning); return; }
         var result = MessageBox.Show($"Do you want to print {PrintContentList.Count()} Cards?", "Print", MessageBoxButton.YesNo);
         if(result == MessageBoxResult.No) { return; }
 
@@ -157,7 +156,7 @@ public partial class MainWindowViewModel
         {
             var fieldValues = GetFieldValues(item, SelectedLayout); 
             var canvas = CanvasHelper.GetCanvas(fieldValues,SelectedLayout, Settings.Default.PrintScale, false);
-            PrintHelper.Print(canvas);
+            PrintHelper.Print(canvas, _selectedPrinter);
         }
 
     }
@@ -166,7 +165,7 @@ public partial class MainWindowViewModel
         if (string.IsNullOrEmpty(layoutName)) return;
 
         string error;
-        SelectedLayout = DataAccess.GetLayout(LayoutPath, layoutName, out error);
+        SelectedLayout = DataAccess.LoadLayout(_layoutPath, layoutName, out error);
 
         if (SelectedLayout is null)
         {
@@ -181,23 +180,23 @@ public partial class MainWindowViewModel
 
     public void SetLayouts()
     {
-        if (!Directory.Exists(LayoutPath))
+        if (!Directory.Exists(_layoutPath))
         {
-            MessageBox.Show("Layout Folder missing!" + "\n \n" + $"Path: {LayoutPath}", "error", MessageBoxButton.OK, MessageBoxImage.Warning);
+            MessageBox.Show("Layout Folder missing!" + "\n \n" + $"Path: {_layoutPath}", "error", MessageBoxButton.OK, MessageBoxImage.Warning);
             return;
         }
-        LayoutNames = new ObservableCollection<string>(DataAccess.GetLayoutNames(LayoutPath));
+        LayoutNames = new ObservableCollection<string>(DataAccess.GetLayoutNames(_layoutPath));
 
-        if (!LayoutNames.Any()) { MessageBox.Show("No Layouts found!" + "\n \n" + $"Path: {LayoutPath}", "error", MessageBoxButton.OK, MessageBoxImage.Information); }
+        if (!LayoutNames.Any()) { MessageBox.Show("No Layouts found!" + "\n \n" + $"Path: {_layoutPath}", "error", MessageBoxButton.OK, MessageBoxImage.Information); }
     }
 
     [RelayCommand]
     private void SetView()
     {
         if(SelectedLayout == null) return;
-        ViewBackground = CanvasHelper.GetViewBackground(SelectedLayout,ViewSize);
+        ViewBackground = CanvasHelper.GetViewBackground(SelectedLayout,_viewSize);
         var fieldValues = GetFieldValues(SelectedPrintContent, SelectedLayout);
-        View = CanvasHelper.GetCanvas(fieldValues, SelectedLayout, ViewSize,true);
+        View = CanvasHelper.GetCanvas(fieldValues, SelectedLayout, _viewSize,true);
     }
     
     private void ClearView()

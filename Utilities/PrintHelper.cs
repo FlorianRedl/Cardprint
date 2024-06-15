@@ -20,12 +20,12 @@ namespace Cardprint.Utilities;
 static public class PrintHelper
 {
 
-    public static void Print(Canvas pCanvas)
+    public static void Print(Canvas pCanvas,string printerName)
     {
         try
         {
             PrintDialog pd = new PrintDialog();
-            PrintQueue queue = new LocalPrintServer().GetPrintQueue(Settings.Default.SelectedPrinter);
+            PrintQueue queue = new LocalPrintServer().GetPrintQueue(printerName);
             pd.PrintQueue = queue;
        
             //var pCanvas = GetCanvas(SelectedPrintContent, SelectedLayout);

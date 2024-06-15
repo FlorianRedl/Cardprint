@@ -24,7 +24,7 @@ public partial class MainWindowView : Window
     
     
 
-    private void UpdateGrid(string[] headers)
+    private void UpdateGrid(string[]? headers)
     {
 
         DatagridPrintContent.Columns.Clear();
