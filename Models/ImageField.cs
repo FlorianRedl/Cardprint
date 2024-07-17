@@ -3,7 +3,7 @@
 
 namespace Cardprint.Models;
 
-public class ImageFieldModel : IField
+public class ImageField : IField
 {
     public string Name { get; set; }
     public string Path { get; set; }
@@ -13,7 +13,7 @@ public class ImageFieldModel : IField
     public double Height { get; set; }
 
 
-    public ImageFieldModel(string name, double xCord, double yCord,double width,double heigth, string path)
+    public ImageField(string name, double xCord, double yCord,double width,double heigth, string path)
     {
         Name = name;
         Path = path;

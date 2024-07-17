@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace Cardprint.Models;
 
-public partial class LayoutModel : ObservableObject
+public partial class Layout : ObservableObject
 {
 
     public string LayoutName { get; set; }
@@ -35,7 +35,7 @@ public partial class LayoutModel : ObservableObject
         }
     }
 
-    public LayoutModel(string layoutName,string? format, List<IField> fields)
+    public Layout(string layoutName,string? format, List<IField> fields)
     {
         LayoutName = layoutName;
         Fields = fields;

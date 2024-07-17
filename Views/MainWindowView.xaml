@@ -37,9 +37,15 @@
         <Menu Grid.Row="0" Grid.ColumnSpan="2">
             <MenuItem Header="Data">
                 <MenuItem Header="Settings" Command="{Binding OpenSettingsCommand}"></MenuItem>
-                <MenuItem Header="Open Layouts" Command="{Binding OpenLayoutFolderCommand}"></MenuItem>
+                <MenuItem Header="Open Layouts" Command="{Binding OpenLayoutFolderCommand}" ></MenuItem>
+                <Separator/>
+                <MenuItem Header="Exit" Command="{Binding ExitAppCommand}" InputGestureText="Alt+F4"></MenuItem>
+            </MenuItem>
+            <MenuItem Header="Help" HorizontalAlignment="Right">
                 <MenuItem Header="About CardPrint" Command="{Binding OpenGithubCardPrintCommand}" ></MenuItem>
                 <MenuItem Header="About FLR-Studios" Command="{Binding OpenFlrStudiosCommand}" ></MenuItem>
+                <Separator/>
+                <MenuItem Header="{Binding AppVersion }" ></MenuItem>
             </MenuItem>
         </Menu>
         <StackPanel Grid.Row="1" VerticalAlignment="Bottom" Margin="10,0,10,0">

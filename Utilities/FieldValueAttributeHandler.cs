@@ -10,7 +10,7 @@ namespace Cardprint.Utilities;
 
 static class FieldValueAttributeHandler
 {
-    public static string CheckAndReplaceTextValue(TextFieldModel textfield)
+    public static string CheckAndReplaceTextValue(TextField textfield)
     {
         
         if (string.IsNullOrEmpty(textfield.Text)) return "";

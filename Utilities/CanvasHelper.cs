@@ -18,7 +18,7 @@ static class CanvasHelper
     static private SolidColorBrush GreyBrush { get { return new SolidColorBrush((Color)ColorConverter.ConvertFromString("#A2A2A2")); }}
 
 
-    public static Canvas GetViewBackground(LayoutModel layout,double viewSize)
+    public static Canvas GetViewBackground(Layout layout,double viewSize)
     {
         Canvas canvas = new();
 
@@ -38,7 +38,7 @@ static class CanvasHelper
         return canvas;
 
     }
-    public static Canvas GetCanvas(Dictionary<string,string> fieldValues, LayoutModel layout, double viewSize, bool fieldNamesDisplayed)
+    public static Canvas GetCanvas(Dictionary<string,string> fieldValues, Layout layout, double viewSize, bool fieldNamesDisplayed)
     {
         if (layout == null) return new Canvas();
 
@@ -55,7 +55,7 @@ static class CanvasHelper
             var x = MillimeterToPixel(field.XCord, viewSize);
             var y = MillimeterToPixel(field.YCord, viewSize);
 
-            if (field is TextFieldModel textField)
+            if (field is TextField textField)
             {
                 if(!fieldNamesDisplayed && !fieldValues.ContainsKey(field.Name)) continue;
                 Label label = new Label();
@@ -78,7 +78,7 @@ static class CanvasHelper
                 Canvas.SetTop(label, y);
 
             }
-            else if (field is ImageFieldModel imageField)
+            else if (field is ImageField imageField)
             {
                 Image image = new Image();
                 image.Source = new BitmapImage(new Uri(imageField.Path));

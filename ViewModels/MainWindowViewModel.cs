@@ -1,26 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Data;
-using System.Printing;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using Cardprint.Models;
+﻿using Cardprint.Models;
+using Cardprint.Properties;
+using Cardprint.Utilities;
 using Cardprint.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using System.Linq;
-using Cardprint.Properties;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Data;
 using System.Diagnostics;
 using System.IO;
-using Cardprint.Utilities;
-using System.Collections;
-using System.Xml;
-using System.Security.Policy;
-using System.Text.RegularExpressions;
+using System.Linq;
+using System.Printing;
+using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Threading;
 
 namespace Cardprint.ViewModels;
@@ -37,7 +30,8 @@ public partial class MainWindowViewModel
     public Action<string[]?> OnSelectedLayoutChanges;
 
 
-
+    [ObservableProperty]
+    public string appVersion;
     //Layouts
     [ObservableProperty]
     public ObservableCollection<string> layoutNames = new();
@@ -54,9 +48,9 @@ public partial class MainWindowViewModel
         LoadLayout(value);
     }
     [ObservableProperty]
-    public LayoutModel? selectedLayout;
+    public Layout? selectedLayout;
     [ObservableProperty]
-    public ObservableCollection<LayoutModel> layouts = new();
+    public ObservableCollection<Layout> layouts = new();
 
     [ObservableProperty]
     public List<string> printContentHeaders = new();
@@ -82,6 +76,8 @@ public partial class MainWindowViewModel
         _printerCheckTimer.Interval = TimeSpan.FromMilliseconds(250);
         _printerCheckTimer.Tick += Timer_Tick;
         _printerCheckTimer.Start();
+        var version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+        if (version != null) AppVersion = $"Version {version.ToString(3)}";
 
     }
 
@@ -145,6 +141,12 @@ public partial class MainWindowViewModel
         Process.Start("explorer.exe", url);
     }
     [RelayCommand]
+    private void ExitApp()
+    {
+        //close main window
+        Application.Current.Shutdown();
+    }
+    [RelayCommand]
     private void Print()
     {
         if(string.IsNullOrEmpty(_selectedPrinter)) { MessageBox.Show("No Printer selected!", "error", MessageBoxButton.OK, MessageBoxImage.Warning); return; }
@@ -206,13 +208,13 @@ public partial class MainWindowViewModel
         ViewBackground.Children.Clear();
     }
 
-    private void SetNewPrintContent(LayoutModel layout)
+    private void SetNewPrintContent(Layout layout)
     {
         PrintContentList.Clear();
 
-        var textfields =  layout.Fields.Where(s => s.GetType() == typeof(TextFieldModel)).Cast<TextFieldModel>().ToList(); 
+        var textfields =  layout.Fields.Where(s => s.GetType() == typeof(TextField)).Cast<TextField>().ToList(); 
 
-        printContentHeaders = textfields.Where(s=> s.GetType() == typeof(TextFieldModel) & string.IsNullOrEmpty(s.Text)).Select(s => s.Name).ToList();
+        printContentHeaders = textfields.Where(s=> s.GetType() == typeof(TextField) & string.IsNullOrEmpty(s.Text)).Select(s => s.Name).ToList();
         OnSelectedLayoutChanges?.Invoke(printContentHeaders.ToArray());
         PrintContentList.Add(new PrintContent());
     }
@@ -222,12 +224,12 @@ public partial class MainWindowViewModel
         OnSelectedLayoutChanges?.Invoke(null);
     }
 
-    private Dictionary<string,string> GetFieldValues(PrintContent printContent,LayoutModel layout)
+    private Dictionary<string,string> GetFieldValues(PrintContent printContent,Layout layout)
     {
         Dictionary<string, string> fieldValues = new();
 
         int fieldIndex = 1;
-        foreach (var field in layout.Fields.OfType<TextFieldModel>())
+        foreach (var field in layout.Fields.OfType<TextField>())
         {
             var fieldValue = FieldValueAttributeHandler.CheckAndReplaceTextValue(field);
 
@@ -275,6 +277,6 @@ public partial class MainWindowViewModel
     public void StartUp()
     {
         SetLayouts();
-        var appPath = AppDomain.CurrentDomain.BaseDirectory;
+        //var appPath = AppDomain.CurrentDomain.BaseDirectory;
     }
 }

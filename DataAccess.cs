@@ -34,7 +34,7 @@ public static class DataAccess
         }
     }
 
-    public static LayoutModel? LoadLayout(string filePath,string layoutName,out string error)
+    public static Layout? LoadLayout(string filePath,string layoutName,out string error)
     {
         try
         {
@@ -60,7 +60,7 @@ public static class DataAccess
 
                 var value = field.SelectSingleNode("value")?.InnerText;
 
-                fields.Add(new TextFieldModel(name,xCord,yCord,size,value));
+                fields.Add(new TextField(name,xCord,yCord,size,value));
             }
 
             var images = doc.GetElementsByTagName("image");
@@ -84,10 +84,10 @@ public static class DataAccess
                 if (path is null) continue; // meldung
                 if(!File.Exists(path)) continue; //meldung
 
-                fields.Add(new ImageFieldModel(name, xCord, yCord, width, height, path));
+                fields.Add(new ImageField(name, xCord, yCord, width, height, path));
             }
 
-            return new LayoutModel(layoutName, format, fields);
+            return new Layout(layoutName, format, fields);
 
         }
         catch (Exception ex)
