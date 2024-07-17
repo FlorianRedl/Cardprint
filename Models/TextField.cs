@@ -1,6 +1,6 @@
 ﻿namespace Cardprint.Models;
 
-public class TextField :IField
+public class TextField : IField
 {
     public string Name { get; set; }
     public double XCord { get; set; }

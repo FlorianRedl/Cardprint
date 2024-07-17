@@ -1,7 +1,4 @@
-﻿using System;
-
-
-namespace Cardprint.Models;
+﻿namespace Cardprint.Models;
 
 public class ImageField : IField
 {
@@ -21,7 +18,6 @@ public class ImageField : IField
         YCord = yCord;
         Width = width;
         Height = heigth;
-
 
     }
 }

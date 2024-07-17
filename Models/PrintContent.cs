@@ -10,7 +10,7 @@ namespace Cardprint.Models
     [ObservableObject]
     public partial  class PrintContent
     {
-        public int Count { get; set; }
+        public int Quantity { get; set; }
         public string? Field1 { get; set; }
         public string? Field2 { get; set; }
         public string? Field3 { get; set; }
@@ -24,7 +24,7 @@ namespace Cardprint.Models
 
         public PrintContent()
         {
-            Count = 1;
+            Quantity = 1;
         }
 
        

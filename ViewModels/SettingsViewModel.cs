@@ -121,7 +121,7 @@ internal partial class SettingsViewModel : ObservableValidator
     {
         if (string.IsNullOrEmpty(SelectedPrinter)) { MessageBox.Show("No Printer selected!", "error", MessageBoxButton.OK, MessageBoxImage.Warning); return; }
         _timer.Start();
-        PrintHelper.Print(CanvasHelper.GetTestPrintCanvas(SelectedFormat!,OffsetX, OffsetY,PrintScale), SelectedPrinter);
+        PrintHelper.Print(CanvasHelper.GetTestPrintCanvas(SelectedFormat!,OffsetX, OffsetY,PrintScale), SelectedPrinter,1);
     }
 
     [RelayCommand]

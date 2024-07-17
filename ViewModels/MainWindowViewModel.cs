@@ -151,14 +151,15 @@ public partial class MainWindowViewModel
     {
         if(string.IsNullOrEmpty(_selectedPrinter)) { MessageBox.Show("No Printer selected!", "error", MessageBoxButton.OK, MessageBoxImage.Warning); return; }
         if(SelectedLayout == null) { MessageBox.Show("No Layout selected!", "error", MessageBoxButton.OK, MessageBoxImage.Warning); return; }
-        var result = MessageBox.Show($"Do you want to print {PrintContentList.Count()} Cards?", "Print", MessageBoxButton.YesNo);
+        var pageCount = PrintContentList.Sum(s => s.Quantity);
+        var result = MessageBox.Show($"Do you want to print {pageCount} Cards?", "Print", MessageBoxButton.YesNo);
         if(result == MessageBoxResult.No) { return; }
 
         foreach (var item in PrintContentList)
         {
             var fieldValues = GetFieldValues(item, SelectedLayout); 
             var canvas = CanvasHelper.GetCanvas(fieldValues,SelectedLayout, Settings.Default.PrintScale, false);
-            PrintHelper.Print(canvas, _selectedPrinter);
+            PrintHelper.Print(canvas, _selectedPrinter,item.Quantity);
         }
 
     }

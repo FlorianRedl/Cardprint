@@ -1,35 +1,27 @@
-﻿using Cardprint.Models;
-using Cardprint.Properties;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
+﻿using System;
+using System.Drawing.Printing;
 using System.Printing;
-using System.Reflection.Metadata;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
-using System.Windows.Shapes;
-using System.Windows.Threading;
+using System.Windows.Documents;
 
 namespace Cardprint.Utilities;
 
 static public class PrintHelper
 {
 
-    public static void Print(Canvas pCanvas,string printerName)
+    public static void Print(Canvas pCanvas,string printerName,int quantity)
     {
         try
         {
             PrintDialog pd = new PrintDialog();
             PrintQueue queue = new LocalPrintServer().GetPrintQueue(printerName);
             pd.PrintQueue = queue;
-       
-            //var pCanvas = GetCanvas(SelectedPrintContent, SelectedLayout);
-            pd.PrintVisual(pCanvas, "printing Card");
+            for (int i = 0; i < quantity; i++)
+            {
+                pd.PrintVisual(pCanvas, $"printing Card [{i}]");
+            }
+            
 
         }
         catch (Exception ex)

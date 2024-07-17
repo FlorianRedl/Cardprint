@@ -22,23 +22,25 @@ public partial class MainWindowView : Window
         InitializeComponent();
     }
     
-    
 
     private void UpdateGrid(string[]? headers)
     {
 
         DatagridPrintContent.Columns.Clear();
-        if(headers == null|| headers.Length == 0 ) return ;
+        if(headers == null || headers.Length == 0 ) return ;
         for (int i = 0; i < headers.Length; i++)
         {
             DataGridTextColumn c = new DataGridTextColumn();
-
             var c2 = c as DataGridColumn;
             c.Header = headers[i];
             c.Binding = new Binding($"Field{i+1}");
             DatagridPrintContent.Columns.Add(c);               
             if (i == headers.Length-1) c.Width = new DataGridLength(10, DataGridLengthUnitType.Star); ;
-        }  
+        }
+        DataGridTextColumn countColumn = new DataGridTextColumn();
+        countColumn.Header = "Quantity";
+        countColumn.Binding = new Binding("Quantity");
+        DatagridPrintContent.Columns.Add(countColumn);
     }
 
     private void Datagrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
