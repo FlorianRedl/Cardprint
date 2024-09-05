@@ -81,6 +81,10 @@ __Versatile Printing Options:__ Print individual cards or entire batches with ju
     </text>
 </layout>
 ```
+### Static Field Values
+These static field values are automatically inserted with each print, so it is possible, for example, to always print the current date.
+- [date] returns the date in the following format "dd.MM.yyyy"
+- [winUser]  returns the environment user name for the active Widows user
 
 ## Printer Settings
 ![Settings View](https://raw.githubusercontent.com/FlorianRedl/Cardprint/master/Screenshots/CardPrint_Settings.PNG)
