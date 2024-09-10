@@ -1,46 +1,27 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using System;
-using Cardprint.Models;
+﻿using Cardprint.Utilities;
 using System.Collections.Generic;
-
+using System.Linq;
+using System.Xml.Serialization;
 
 namespace Cardprint.Models;
 
-public partial class Layout : ObservableObject
+[XmlRoot("layout")]
+public class Layout
 {
+    [XmlIgnore]
+    public string Name { get; set; } = string.Empty;
+    [XmlElement("format")]
+    public string Format { get; set; } = string.Empty;
+    [XmlElement("text")]
+    public List<TextField> TextFields { get; set; } = new();
+    [XmlElement("image")]
+    public List<ImageField> ImageFields { get; set; } = new();
 
-    public string LayoutName { get; set; }
-    //public string? BackgroundImg { get; set; }
-    public string? Format { get; set; }
-
-    public (double width,double height) FormatSize { get { return GetFormatSize(); } }
-
-    public List<IField> Fields { get; set; }
-
-    private (double width, double height) GetFormatSize()
-    {
-        if (Format == null) return (0,0); 
-        switch (Format)
-        {
-            case "ID-0":
-                return (25, 15);
-            case "ID-1":
-                return (85.60, 53.98);
-            case "ID-2":
-                return (105, 74);
-            case "ID-3":
-                return (125,88);
-            default:
-                return (85.60, 53.98);
-        }
-    }
-
-    public Layout(string layoutName,string? format, List<IField> fields)
-    {
-        LayoutName = layoutName;
-        Fields = fields;
-        Format = format;
-    }
-
+    [XmlIgnore]
+    public List<IField> Fields { get { return TextFields.Concat<IField>(ImageFields).ToList(); } } 
+    [XmlIgnore]
+    public (double width, double height) FormatSize { get { return Utils.GetFormatSize(Format); } }
 
 }
+
+

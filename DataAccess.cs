@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Xml;
+using System.Xml.Serialization;
 using Cardprint.Models;
 using static System.Net.Mime.MediaTypeNames;
 
@@ -34,67 +35,40 @@ public static class DataAccess
         }
     }
 
-    public static Layout? LoadLayout(string filePath,string layoutName,out string error)
+
+    public static Layout? LoadLayout(string dirpath, string layoutName, out string error)
     {
+        error = string.Empty;
+        var path = Path.Combine(dirpath, layoutName + ".xml");
+        if (!File.Exists(path))
+        {
+            error = $"File does not exist ({path})";
+            return null;
+        }
+
         try
         {
-            error = string.Empty;
-            XmlDocument doc = new XmlDocument();
-            doc.Load(filePath+"\\"+layoutName+".xml");
-            var format = doc.GetElementsByTagName("format").Item(0)?.InnerText;
-            var texts = doc.GetElementsByTagName("text");
-            List<IField> fields = new();
-
-            foreach (XmlNode field in texts)
+            using (var stream = File.OpenRead(path))
             {
-                var name = field.SelectSingleNode("name")?.InnerText;
-                if (name is null) continue;
-                var x = field.SelectSingleNode("x")?.InnerText;
-                var xCord = x is null ? 0 : double.Parse(x);
-
-                var y = field.SelectSingleNode("y")?.InnerText;
-                var yCord = y is null ? 0 : double.Parse(y);
-
-                var s = field.SelectSingleNode("size")?.InnerText;
-                var size = s is null ? 0 : double.Parse(s);
-
-                var value = field.SelectSingleNode("value")?.InnerText;
-
-                fields.Add(new TextField(name,xCord,yCord,size,value));
+                var xmlSerializer = new XmlSerializer(typeof(Layout));
+                var layoutfile = xmlSerializer.Deserialize(stream) as Layout;
+                if(layoutfile is null)
+                {
+                    error = "Deserialization failed";
+                    return null;
+                }
+                layoutfile.Name = layoutName;
+                return layoutfile;
             }
-
-            var images = doc.GetElementsByTagName("image");
-            foreach (XmlNode image in images)
-            {
-                var name = image.SelectSingleNode("name")?.InnerText;
-                if (name is null) continue; //Meldung
-                var x = image.SelectSingleNode("x")?.InnerText;
-                var xCord = x is null ? 0 : double.Parse(x);
-
-                var y = image.SelectSingleNode("y")?.InnerText;
-                var yCord = y is null ? 0 : double.Parse(y);
-
-                var w = image.SelectSingleNode("width")?.InnerText;
-                var width = w is null ? 0 : double.Parse(w);
-
-                var h = image.SelectSingleNode("height")?.InnerText;
-                var height = h is null ? 0 : double.Parse(h);
-
-                var path = image.SelectSingleNode("path")?.InnerText;
-                if (path is null) continue; // meldung
-                if(!File.Exists(path)) continue; //meldung
-
-                fields.Add(new ImageField(name, xCord, yCord, width, height, path));
-            }
-
-            return new Layout(layoutName, format, fields);
-
         }
         catch (Exception ex)
         {
-            error = ex.Message; 
+            error = ex.Message;
             return null;
-            
+
         }
+
+
+           
     }
 }

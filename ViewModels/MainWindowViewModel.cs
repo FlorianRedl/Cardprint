@@ -27,11 +27,11 @@ public partial class MainWindowViewModel
     string _layoutPath { get { return Settings.Default.LayoutPath; } } // nötig ?
     string _selectedPrinter { get { return Settings.Default.SelectedPrinter; } }
 
-    public Action<string[]?> OnSelectedLayoutChanges;
+    public Action<string[]?>? OnSelectedLayoutChanges;
 
 
     [ObservableProperty]
-    public string appVersion;
+    public string appVersion = string.Empty;
     //Layouts
     [ObservableProperty]
     public ObservableCollection<string> layoutNames = new();
@@ -169,6 +169,8 @@ public partial class MainWindowViewModel
 
         string error;
         SelectedLayout = DataAccess.LoadLayout(_layoutPath, layoutName, out error);
+        //var layout = DataAccess.LoadLayout(_layoutPath, layoutName, out error);
+
 
         if (SelectedLayout is null)
         {
@@ -213,9 +215,9 @@ public partial class MainWindowViewModel
     {
         PrintContentList.Clear();
 
-        var textfields =  layout.Fields.Where(s => s.GetType() == typeof(TextField)).Cast<TextField>().ToList(); 
+        var textfields =  layout.TextFields;
 
-        printContentHeaders = textfields.Where(s=> s.GetType() == typeof(TextField) & string.IsNullOrEmpty(s.Text)).Select(s => s.Name).ToList();
+        PrintContentHeaders = textfields.Where(s=> s.GetType() == typeof(TextField) & string.IsNullOrEmpty(s.Text)).Select(s => s.Name).ToList();
         OnSelectedLayoutChanges?.Invoke(printContentHeaders.ToArray());
         PrintContentList.Add(new PrintContent());
     }
@@ -230,7 +232,7 @@ public partial class MainWindowViewModel
         Dictionary<string, string> fieldValues = new();
 
         int fieldIndex = 1;
-        foreach (var field in layout.Fields.OfType<TextField>())
+        foreach (var field in layout.TextFields)
         {
             var fieldValue = FieldValueAttributeHandler.CheckAndReplaceTextValue(field);
 
