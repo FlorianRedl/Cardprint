@@ -37,16 +37,20 @@ __Versatile Printing Options:__ Print individual cards or entire batches with ju
 
 
 ## XML Layout creation
-### Supported Field Types:
-- text
-- image
-  
 ### Supportet Formats:
 - ISO/IEC 7810
   - ID-0 (25.00 mm, 15.00 mm)
   - ID-1 (85.60 mm, 53.98 mm)
   - ID-2 (105.00 mm, 74.00 mm)
   - ID-3 (125.00 mm, 88.00 mm)
+### Supported Field Types:
+- text
+- image
+
+### positioning of the fields using coordinates
+x => horizontal positioning starting from the left
+
+y => vertical positioning starting from the top
 
 ### example:
 ```xml
