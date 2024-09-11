@@ -10,7 +10,7 @@ using System.Windows.Media;
 using System.Windows;
 using System.Windows.Shapes;
 using System.Windows.Media.Imaging;
-
+using System.IO;
 namespace Cardprint.Views;
 
 static class CanvasHelper
@@ -81,10 +81,19 @@ static class CanvasHelper
 
             if(field is ImageField imageField)
             {
+                if (!File.Exists(imageField.Path))
+                {
+                    Label label = new Label();
+                    label.Foreground = new SolidColorBrush(Colors.Red);
+                    label.Content = "path not found";
+                    canvas.Children.Add(label);
+                    Canvas.SetLeft(label, x);
+                    Canvas.SetTop(label, y);
+                    continue;
+                }
 
                 Image image = new Image();
                 image.Source = new BitmapImage(new Uri(imageField.Path));
-
                 if (imageField.Width != 0) image.Width = MillimeterToPixel(imageField.Width, viewSize);
                 if (imageField.Height != 0) image.Height = MillimeterToPixel(imageField.Height, viewSize);
                 image.Stretch = Stretch.Uniform;
