@@ -15,20 +15,12 @@ public class TextField : IField
     [XmlElement("value")]
     public string? Text { get; set; }
 
-    public TextField(string name, double xCord, double yCord, double size, string? text)
-    {
-        Name = name;
-        XCord = xCord;
-        YCord = yCord;
-        Size = size;
-        Text = text;
-    }
     public TextField()
     {
         Name = string.Empty;
         XCord = 0;
         YCord = 0;
-        Size = 0;
+        Size = 1;
         Text = string.Empty;
     }
 

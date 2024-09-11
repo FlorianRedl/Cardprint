@@ -17,17 +17,6 @@ public class ImageField : IField
     [XmlElement("height")]
     public double Height { get; set; }
 
-
-    public ImageField(string name, double xCord, double yCord,double width,double heigth, string path)
-    {
-        Name = name;
-        Path = path;
-        XCord = xCord;
-        YCord = yCord;
-        Width = width;
-        Height = heigth;
-
-    }
     public ImageField()
     {
         Name = string.Empty;

@@ -57,7 +57,7 @@ static class CanvasHelper
 
             if(field is TextField textField)
             {
-                if(!fieldNamesDisplayed && !fieldValues.ContainsKey(field.Name)) continue;
+                if(!fieldNamesDisplayed && !fieldValues.ContainsKey(textField.Name)) continue;
 
                 Label label = new Label();
                 if (fieldValues.ContainsKey(textField.Name))
