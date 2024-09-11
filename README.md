@@ -37,8 +37,15 @@ __Versatile Printing Options:__ Print individual cards or entire batches with ju
   - ID-2 (105.00 mm, 74.00 mm)
   - ID-3 (125.00 mm, 88.00 mm)
 ### Supported Field Types:
-- text
-- image
+<details>
+  <summary>text</summary>
+  <p>- required elements: x, y, name, size</p>
+  <p>- optional elements: value</p>
+</details>
+<details>
+  <summary>image</summary>
+  <p>- required elements: x, y, path, width or heigth</p>
+</details>
 
 ### positioning of the fields using coordinates
 x => horizontal positioning starting from the left
