@@ -83,12 +83,15 @@ static class CanvasHelper
             {
                 if (!File.Exists(imageField.Path))
                 {
-                    Label label = new Label();
-                    label.Foreground = new SolidColorBrush(Colors.Red);
-                    label.Content = "path not found";
-                    canvas.Children.Add(label);
-                    Canvas.SetLeft(label, x);
-                    Canvas.SetTop(label, y);
+                    if (fieldNamesDisplayed)
+                    {
+                        Label label = new Label();
+                        label.Foreground = new SolidColorBrush(Colors.Red);
+                        label.Content = "path not found";
+                        canvas.Children.Add(label);
+                        Canvas.SetLeft(label, x);
+                        Canvas.SetTop(label, y);
+                    }
                     continue;
                 }
 

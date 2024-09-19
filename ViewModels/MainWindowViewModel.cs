@@ -266,15 +266,34 @@ public partial class MainWindowViewModel
     private void Timer_Tick(object? sender, EventArgs e)
     {
         if (string.IsNullOrEmpty(Settings.Default.SelectedPrinter)) return;
-        var printQueue = new LocalPrintServer().GetPrintQueue(Settings.Default.SelectedPrinter);
-        printQueue.Refresh();
-        var n = printQueue.NumberOfJobs;
-        if (n <= 0)
+
+        try
         {
-            PrintStatus = "";
-            return;
-        };
-        PrintStatus = $"Printqueue: {n}";
+            var server = new PrintServer();
+            var printQueues = server.GetPrintQueues(new[] { EnumeratedPrintQueueTypes.Local, EnumeratedPrintQueueTypes.Connections });
+
+            var selectedPrintQueue = printQueues.FirstOrDefault(s => s.FullName == Settings.Default.SelectedPrinter);
+            if(selectedPrintQueue == null)
+            {
+                PrintStatus = $"Printqueue not found";
+                return;
+            };
+
+
+            selectedPrintQueue.Refresh();
+            var n = selectedPrintQueue.NumberOfJobs;
+            if (n <= 0)
+            {
+                PrintStatus = "";
+                return;
+            };
+            PrintStatus = $"Printqueue {selectedPrintQueue.Name}: {n}";
+
+        }
+        catch (Exception)
+        {
+
+        }
     }
 
     public void StartUp()

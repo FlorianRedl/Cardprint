@@ -6,9 +6,9 @@
     <UseWPF>true</UseWPF>
     <UseWindowsForms>true</UseWindowsForms>
     <ApplicationIcon>Assets\CardPrint.ico</ApplicationIcon>
-    <FileVersion>0.1.4</FileVersion>
-    <AssemblyVersion>0.1.4</AssemblyVersion>
-    <ProductVersion>0.1.4</ProductVersion>
+    <FileVersion>0.1.5</FileVersion>
+    <AssemblyVersion>0.1.5</AssemblyVersion>
+    <ProductVersion>0.1.5</ProductVersion>
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="MyClassBuilder.cs" />
