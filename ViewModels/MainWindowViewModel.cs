@@ -26,7 +26,7 @@ public partial class MainWindowViewModel
     double _viewSize { get { return Settings.Default.ViewSize; } } // 0.1 bis +2
     string _layoutPath { get { return Settings.Default.LayoutPath; } } // nötig ?
     string _selectedPrinter { get { return Settings.Default.SelectedPrinter; } }
-
+    PrintQueue? _selectedPrintQueue { get { return Utils.GetPrintQueueFromName(Settings.Default.SelectedPrinter); } }
     public Action<string[]?>? OnSelectedLayoutChanges;
 
 
@@ -42,9 +42,9 @@ public partial class MainWindowViewModel
         if(string.IsNullOrEmpty(value)) return;
         if(PrintContentList.Count > 1)
         {
-            //Todo Dialog
+            //Todo Dialog the already filled fields will be lost
         }
-        
+
         LoadLayout(value);
     }
     [ObservableProperty]
@@ -78,7 +78,6 @@ public partial class MainWindowViewModel
         _printerCheckTimer.Start();
         var version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
         if (version != null) AppVersion = $"Version {version.ToString(3)}";
-
     }
 
     [RelayCommand]
@@ -121,6 +120,8 @@ public partial class MainWindowViewModel
     private void Settings_Closed(object? sender, EventArgs e)
     {
         SetLayouts();
+
+        
     }
 
     [RelayCommand]
@@ -143,13 +144,12 @@ public partial class MainWindowViewModel
     [RelayCommand]
     private void ExitApp()
     {
-        //close main window
         Application.Current.Shutdown();
     }
     [RelayCommand]
     private void Print()
     {
-        if(string.IsNullOrEmpty(_selectedPrinter)) { MessageBox.Show("No Printer selected!", "error", MessageBoxButton.OK, MessageBoxImage.Warning); return; }
+        if(_selectedPrintQueue is null) { MessageBox.Show("No Printer selected!", "error", MessageBoxButton.OK, MessageBoxImage.Warning); return; }
         if(SelectedLayout == null) { MessageBox.Show("No Layout selected!", "error", MessageBoxButton.OK, MessageBoxImage.Warning); return; }
         var pageCount = PrintContentList.Sum(s => s.Quantity);
         var result = MessageBox.Show($"Do you want to print {pageCount} Cards?", "Print", MessageBoxButton.YesNo);
@@ -159,7 +159,7 @@ public partial class MainWindowViewModel
         {
             var fieldValues = GetFieldValues(item, SelectedLayout); 
             var canvas = CanvasHelper.GetCanvas(fieldValues,SelectedLayout, Settings.Default.PrintScale, false);
-            PrintHelper.Print(canvas, _selectedPrinter,item.Quantity);
+            PrintHelper.Print(canvas, _selectedPrintQueue, item.Quantity);
         }
 
     }
@@ -269,25 +269,20 @@ public partial class MainWindowViewModel
 
         try
         {
-            var server = new PrintServer();
-            var printQueues = server.GetPrintQueues(new[] { EnumeratedPrintQueueTypes.Local, EnumeratedPrintQueueTypes.Connections });
-
-            var selectedPrintQueue = printQueues.FirstOrDefault(s => s.FullName == Settings.Default.SelectedPrinter);
-            if(selectedPrintQueue == null)
+            if(_selectedPrintQueue == null)
             {
-                PrintStatus = $"Printqueue not found";
                 return;
             };
 
 
-            selectedPrintQueue.Refresh();
-            var n = selectedPrintQueue.NumberOfJobs;
+            _selectedPrintQueue.Refresh();
+            var n = _selectedPrintQueue.NumberOfJobs;
             if (n <= 0)
             {
                 PrintStatus = "";
                 return;
             };
-            PrintStatus = $"Printqueue {selectedPrintQueue.Name}: {n}";
+            PrintStatus = $"Printqueue {_selectedPrintQueue.Name}: {n}";
 
         }
         catch (Exception)
@@ -299,6 +294,5 @@ public partial class MainWindowViewModel
     public void StartUp()
     {
         SetLayouts();
-        //var appPath = AppDomain.CurrentDomain.BaseDirectory;
     }
 }

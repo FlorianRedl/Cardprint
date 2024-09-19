@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Cardprint.Properties;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Printing;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -24,5 +26,12 @@ internal static class Utils
             default:
                 return (85.60, 53.98);
         }
+    }
+
+    public static PrintQueue? GetPrintQueueFromName(string printerName)
+    {
+        var server = new PrintServer();
+        var printQueues = server.GetPrintQueues(new[] { EnumeratedPrintQueueTypes.Local, EnumeratedPrintQueueTypes.Connections });
+        return printQueues.FirstOrDefault(s => s.Name == printerName);
     }
 }

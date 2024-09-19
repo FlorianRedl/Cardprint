@@ -30,6 +30,10 @@ internal partial class SettingsViewModel : ObservableValidator
     public List<string> printers = new();
     [ObservableProperty]
     public string selectedPrinter = string.Empty;
+    partial void OnSelectedPrinterChanging(string value)
+    {
+        _selectedPrintQueue = Utils.GetPrintQueueFromName(value);
+    }
     [ObservableProperty]
     public string layoutPath = string.Empty;
 
@@ -56,11 +60,11 @@ internal partial class SettingsViewModel : ObservableValidator
         set => SetProperty(ref offsetY, value, true);
     }
     private DispatcherTimer _timer;
+    private PrintQueue? _selectedPrintQueue;
 
     public SettingsViewModel()
     {
-        var p = System.Drawing.Printing.PrinterSettings.InstalledPrinters;
-        Printers = p.Cast<string>().ToList();
+        Printers = GetPrinterNames();
 
         Formats = new List<Format>
         {
@@ -79,6 +83,7 @@ internal partial class SettingsViewModel : ObservableValidator
         SelectedFormat = Formats.First();
         printScale = Settings.Default.PrintScale;
         SelectedPrinter = Settings.Default.SelectedPrinter;
+        _selectedPrintQueue = Utils.GetPrintQueueFromName(SelectedPrinter);
         ViewSize = Settings.Default.ViewSize;
         layoutPath = Settings.Default.LayoutPath;
         OffsetX = Settings.Default.PrinterOffsetX; 
@@ -87,17 +92,30 @@ internal partial class SettingsViewModel : ObservableValidator
 
     private void Timer_Tick(object? sender, EventArgs e)
     {
-        if (SelectedPrinter == string.Empty) return;
-        PrintQueue queue = new LocalPrintServer().GetPrintQueue(SelectedPrinter);
-        queue.Refresh();
-        var t = queue.IsPrinting;
-        var a = queue.IsBusy;
-        var b = queue.IsProcessing;
-        var c = queue.IsWaiting;
-        var n = queue.NumberOfJobs;
-        var x = queue.QueueStatus;
+        if (_selectedPrintQueue is null) return;
 
-        PrinterStatus = $"PrintQueue Items: {n}";
+        try
+        {
+            if (_selectedPrintQueue == null)
+            {
+                return;
+            };
+
+
+            _selectedPrintQueue.Refresh();
+            var n = _selectedPrintQueue.NumberOfJobs;
+            if (n <= 0)
+            {
+                PrinterStatus = "";
+                return;
+            };
+            PrinterStatus = $"Printqueue {_selectedPrintQueue.Name}: {n}";
+
+        }
+        catch (Exception)
+        {
+
+        }
 
     }
 
@@ -121,7 +139,8 @@ internal partial class SettingsViewModel : ObservableValidator
     {
         if (string.IsNullOrEmpty(SelectedPrinter)) { MessageBox.Show("No Printer selected!", "error", MessageBoxButton.OK, MessageBoxImage.Warning); return; }
         _timer.Start();
-        PrintHelper.Print(CanvasHelper.GetTestPrintCanvas(SelectedFormat!,OffsetX, OffsetY,PrintScale), SelectedPrinter,1);
+        if (_selectedPrintQueue is null) { MessageBox.Show("Printer not found!", "error", MessageBoxButton.OK, MessageBoxImage.Warning); return; }
+        PrintHelper.Print(CanvasHelper.GetTestPrintCanvas(SelectedFormat!,OffsetX, OffsetY,PrintScale), _selectedPrintQueue, 1);
     }
 
     [RelayCommand]
@@ -142,6 +161,23 @@ internal partial class SettingsViewModel : ObservableValidator
         if (result.ToString() != string.Empty && result == System.Windows.Forms.DialogResult.OK)
         {
             LayoutPath =  openFileDlg.SelectedPath;
+        }
+    }
+
+
+    private List<string> GetPrinterNames()
+    {
+        try
+        {
+            var server = new PrintServer();
+            var printQueues = server.GetPrintQueues(new[] { EnumeratedPrintQueueTypes.Local, EnumeratedPrintQueueTypes.Connections });
+            return printQueues.Select(s => s.Name).ToList();
+
+        }
+        catch (Exception)
+        {
+            MessageBox.Show("Error getting Printer List", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return new List<string>();
         }
     }
 

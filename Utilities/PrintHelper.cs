@@ -10,23 +10,20 @@ namespace Cardprint.Utilities;
 static public class PrintHelper
 {
 
-    public static void Print(Canvas pCanvas,string printerName,int quantity)
+    public static void Print(Canvas pCanvas,PrintQueue printQueue,int quantity)
     {
         try
         {
             PrintDialog pd = new PrintDialog();
-            PrintQueue queue = new LocalPrintServer().GetPrintQueue(printerName);
-            pd.PrintQueue = queue;
+            pd.PrintQueue = printQueue;
             for (int i = 0; i < quantity; i++)
             {
                 pd.PrintVisual(pCanvas, $"printing Card [{i}]");
             }
-            
-
         }
         catch (Exception ex)
         {
-            MessageBox.Show("incorrect layout!" + "\n \n" + $"{ex.Message}", "error", MessageBoxButton.OK, MessageBoxImage.Warning);
+            MessageBox.Show($"{ex.Message}", "error", MessageBoxButton.OK, MessageBoxImage.Warning);
         }
 
     }
