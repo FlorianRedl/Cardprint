@@ -26,7 +26,7 @@ public partial class MainWindowViewModel
     double _viewSize { get { return Settings.Default.ViewSize; } } // 0.1 bis +2
     string _layoutPath { get { return Settings.Default.LayoutPath; } } // nötig ?
     string _selectedPrinter { get { return Settings.Default.SelectedPrinter; } }
-    PrintQueue? _selectedPrintQueue { get { return Utils.GetPrintQueueFromName(Settings.Default.SelectedPrinter); } }
+    PrintQueue? _selectedPrintQueue;
     public Action<string[]?>? OnSelectedLayoutChanges;
 
 
@@ -76,6 +76,7 @@ public partial class MainWindowViewModel
         _printerCheckTimer.Interval = TimeSpan.FromMilliseconds(250);
         _printerCheckTimer.Tick += Timer_Tick;
         _printerCheckTimer.Start();
+        _selectedPrintQueue = Utils.GetPrintQueueFromName(Settings.Default.SelectedPrinter);
         var version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
         if (version != null) AppVersion = $"Version {version.ToString(3)}";
     }

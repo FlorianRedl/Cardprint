@@ -31,6 +31,13 @@ internal static class Utils
     public static PrintQueue? GetPrintQueueFromName(string printerName)
     {
         var server = new PrintServer();
+        var localServer = new LocalPrintServer();
+        var localPrintQueue = localServer.GetPrintQueue(printerName);
+        if(localPrintQueue is not null)
+        {
+            return localPrintQueue;
+        }
+
         var printQueues = server.GetPrintQueues(new[] { EnumeratedPrintQueueTypes.Local, EnumeratedPrintQueueTypes.Connections });
         return printQueues.FirstOrDefault(s => s.Name == printerName);
     }

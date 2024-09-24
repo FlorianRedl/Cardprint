@@ -167,17 +167,23 @@ internal partial class SettingsViewModel : ObservableValidator
 
     private List<string> GetPrinterNames()
     {
+        var printerNames = new List<string>();
         try
         {
+            var localServer = new LocalPrintServer();
+            var localPrintQueues = localServer.GetPrintQueues();
+            printerNames.AddRange(localPrintQueues.Select(s => s.Name));
+
             var server = new PrintServer();
-            var printQueues = server.GetPrintQueues(new[] { EnumeratedPrintQueueTypes.Local, EnumeratedPrintQueueTypes.Connections });
-            return printQueues.Select(s => s.Name).ToList();
+            var printQueues = server.GetPrintQueues(new[] { EnumeratedPrintQueueTypes.Connections });
+            printerNames.AddRange(printQueues.Select(s => s.Name));
+            return printerNames;
 
         }
         catch (Exception)
         {
             MessageBox.Show("Error getting Printer List", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
-            return new List<string>();
+            return printerNames;
         }
     }
 

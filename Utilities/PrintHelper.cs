@@ -16,6 +16,8 @@ static public class PrintHelper
         {
             PrintDialog pd = new PrintDialog();
             pd.PrintQueue = printQueue;
+            //pd.PrintTicket.PageOrientation = PageOrientation.Landscape;
+
             for (int i = 0; i < quantity; i++)
             {
                 pd.PrintVisual(pCanvas, $"printing Card [{i}]");
