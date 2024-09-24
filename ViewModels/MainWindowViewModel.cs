@@ -23,9 +23,8 @@ namespace Cardprint.ViewModels;
 public partial class MainWindowViewModel 
 {
     //Settings
-    double _viewSize { get { return Settings.Default.ViewSize; } } // 0.1 bis +2
-    string _layoutPath { get { return Settings.Default.LayoutPath; } } // nötig ?
-    string _selectedPrinter { get { return Settings.Default.SelectedPrinter; } }
+    double _viewSize;
+    string _layoutPath;
     PrintQueue? _selectedPrintQueue;
     public Action<string[]?>? OnSelectedLayoutChanges;
 
@@ -76,6 +75,8 @@ public partial class MainWindowViewModel
         _printerCheckTimer.Interval = TimeSpan.FromMilliseconds(250);
         _printerCheckTimer.Tick += Timer_Tick;
         _printerCheckTimer.Start();
+        _viewSize = Settings.Default.ViewSize;
+        _layoutPath = Settings.Default.LayoutPath;
         _selectedPrintQueue = Utils.GetPrintQueueFromName(Settings.Default.SelectedPrinter);
         var version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
         if (version != null) AppVersion = $"Version {version.ToString(3)}";
@@ -120,9 +121,10 @@ public partial class MainWindowViewModel
 
     private void Settings_Closed(object? sender, EventArgs e)
     {
+        _viewSize = Settings.Default.ViewSize;
+        _layoutPath = Settings.Default.LayoutPath;
+        _selectedPrintQueue = Utils.GetPrintQueueFromName(Settings.Default.SelectedPrinter);
         SetLayouts();
-
-        
     }
 
     [RelayCommand]
@@ -267,15 +269,13 @@ public partial class MainWindowViewModel
     private void Timer_Tick(object? sender, EventArgs e)
     {
         if (string.IsNullOrEmpty(Settings.Default.SelectedPrinter)) return;
+        if(_selectedPrintQueue == null)
+        {
+            return;
+        };
 
         try
         {
-            if(_selectedPrintQueue == null)
-            {
-                return;
-            };
-
-
             _selectedPrintQueue.Refresh();
             var n = _selectedPrintQueue.NumberOfJobs;
             if (n <= 0)
@@ -283,7 +283,7 @@ public partial class MainWindowViewModel
                 PrintStatus = "";
                 return;
             };
-            PrintStatus = $"Printqueue {_selectedPrintQueue.Name}: {n}";
+            PrintStatus = $"Printqueue: {n}";
 
         }
         catch (Exception)

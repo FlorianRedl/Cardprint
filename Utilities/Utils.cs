@@ -1,6 +1,7 @@
 ﻿using Cardprint.Properties;
 using System;
 using System.Collections.Generic;
+using System.Drawing.Printing;
 using System.Linq;
 using System.Printing;
 using System.Text;
@@ -30,15 +31,25 @@ internal static class Utils
 
     public static PrintQueue? GetPrintQueueFromName(string printerName)
     {
-        var server = new PrintServer();
-        var localServer = new LocalPrintServer();
-        var localPrintQueue = localServer.GetPrintQueue(printerName);
-        if(localPrintQueue is not null)
-        {
-            return localPrintQueue;
-        }
 
-        var printQueues = server.GetPrintQueues(new[] { EnumeratedPrintQueueTypes.Local, EnumeratedPrintQueueTypes.Connections });
-        return printQueues.FirstOrDefault(s => s.Name == printerName);
+        try
+        {
+            var installedPrinters = PrinterSettings.InstalledPrinters.Cast<string>().ToList();
+            if(installedPrinters.Contains(printerName))
+            {
+                var localServer = new LocalPrintServer();
+                var localPrintQueue = localServer.GetPrintQueue(printerName);
+                return localPrintQueue;
+            }
+
+            var server = new PrintServer();
+            var printQueues = server.GetPrintQueues(new[] { EnumeratedPrintQueueTypes.Local, EnumeratedPrintQueueTypes.Connections });
+            return printQueues.FirstOrDefault(s => s.Name == printerName);
+        }
+        catch (Exception)
+        {
+
+            return null;
+        }
     }
 }
