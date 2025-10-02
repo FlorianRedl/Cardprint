@@ -2,16 +2,12 @@
 
 namespace Cardprint.Models;
 
-public class TextField : IField
+public class TextField : Field
 {
-    [XmlElement("name")]
-    public string Name { get; set; }
-    [XmlElement("x")]
-    public double XCord { get; set; }
-    [XmlElement("y")]
-    public double YCord { get; set; }
+
     [XmlElement("size")]
     public double Size { get; set; }
+
     [XmlElement("value")]
     public string? Text { get; set; }
 
@@ -22,6 +18,7 @@ public class TextField : IField
         YCord = 0;
         Size = 1;
         Text = string.Empty;
+        Rotation = 0;
     }
 
 }

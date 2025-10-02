@@ -73,7 +73,9 @@ static class CanvasHelper
 
                 label.FontSize = textField.Size;
                 label.Padding = new Thickness(0);
-                
+                label.RenderTransform = new RotateTransform(field.Rotation);
+
+
                 canvas.Children.Add(label);
                 Canvas.SetLeft(label, x);
                 Canvas.SetTop(label, y);
@@ -89,6 +91,7 @@ static class CanvasHelper
                         label.Foreground = new SolidColorBrush(Colors.Red);
                         label.Content = "path not found";
                         canvas.Children.Add(label);
+                        label.RenderTransform = new RotateTransform(field.Rotation);
                         Canvas.SetLeft(label, x);
                         Canvas.SetTop(label, y);
                     }
@@ -99,11 +102,47 @@ static class CanvasHelper
                 image.Source = new BitmapImage(new Uri(imageField.Path));
                 if (imageField.Width != 0) image.Width = MillimeterToPixel(imageField.Width, viewSize);
                 if (imageField.Height != 0) image.Height = MillimeterToPixel(imageField.Height, viewSize);
+                image.RenderTransform = new RotateTransform(field.Rotation);
                 image.Stretch = Stretch.Uniform;
                 canvas.Children.Add(image);
                 Canvas.SetZIndex(image, -1);
                 Canvas.SetLeft(image, x);
                 Canvas.SetTop(image, y);
+            }
+
+            if (field is RectangleField rectField)
+            {
+
+                Rectangle rect = new Rectangle();
+
+                if (string.IsNullOrWhiteSpace(rectField.Color))
+                {
+                    rect.Fill = Brushes.Red;
+                }
+                else
+                {
+                    try
+                    {
+                        Color color = (Color)ColorConverter.ConvertFromString(rectField.Color);
+                        rect.Fill = new SolidColorBrush(color);
+
+                    }
+                    catch (Exception)
+                    {
+                        rect.Fill = Brushes.Red;
+                    }
+                }
+
+
+                if (rectField.Width != 0) rect.Width = MillimeterToPixel(rectField.Width, viewSize);
+                if (rectField.Height != 0) rect.Height = MillimeterToPixel(rectField.Height, viewSize);
+                rect.RenderTransform = new RotateTransform(field.Rotation);
+                
+
+                canvas.Children.Add(rect);
+                Canvas.SetZIndex(rect, -5);
+                Canvas.SetLeft(rect, x);
+                Canvas.SetTop(rect, y);
             }
         }
         return canvas;

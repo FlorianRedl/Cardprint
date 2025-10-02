@@ -10,17 +10,26 @@ public class Layout
 {
     [XmlIgnore]
     public string Name { get; set; } = string.Empty;
+
     [XmlElement("format")]
     public string Format { get; set; } = string.Empty;
+
     [XmlElement("text")]
     public List<TextField> TextFields { get; set; } = new();
+
     [XmlElement("image")]
     public List<ImageField> ImageFields { get; set; } = new();
 
+    [XmlElement("rectangle")]
+    public List<RectangleField> RectangleFields { get; set; } = new();
+
+
     [XmlIgnore]
-    public List<IField> Fields { get { return TextFields.Concat<IField>(ImageFields).ToList(); } } 
+    public List<Field> Fields { get { return TextFields.Concat<Field>(ImageFields).Concat(RectangleFields).ToList(); } } 
+
     [XmlIgnore]
     public (double width, double height) FormatSize { get { return Utils.GetFormatSize(Format); } }
+
 
 }
 

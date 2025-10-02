@@ -2,20 +2,17 @@
 
 namespace Cardprint.Models;
 
-public class ImageField : IField
+public class ImageField : Field
 {
-    [XmlElement("name")]
-    public string Name { get; set; }
     [XmlElement("path")]
     public string Path { get; set; }
-    [XmlElement("x")]
-    public double XCord { get; set; }
-    [XmlElement("y")]
-    public double YCord { get; set; }
+
     [XmlElement("width")]
     public double Width { get; set; }
+
     [XmlElement("height")]
     public double Height { get; set; }
+
 
     public ImageField()
     {
@@ -25,5 +22,6 @@ public class ImageField : IField
         YCord = 0;
         Width = 0;
         Height = 0;
+        Rotation = 0;
     }
 }
