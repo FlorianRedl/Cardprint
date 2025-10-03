@@ -28,7 +28,7 @@ static class CanvasHelper
         canvas.Height = height;
 
         Border border = new Border();
-        border.BorderThickness = new System.Windows.Thickness(1);
+        border.BorderThickness = new System.Windows.Thickness(2);
         border.BorderBrush = GreyBrush;
         border.CornerRadius = new System.Windows.CornerRadius(15);
         border.Width = width;
@@ -137,7 +137,6 @@ static class CanvasHelper
                 if (rectField.Width != 0) rect.Width = MillimeterToPixel(rectField.Width, viewSize);
                 if (rectField.Height != 0) rect.Height = MillimeterToPixel(rectField.Height, viewSize);
                 rect.RenderTransform = new RotateTransform(field.Rotation);
-                
 
                 canvas.Children.Add(rect);
                 Canvas.SetZIndex(rect, -5);
@@ -165,6 +164,8 @@ static class CanvasHelper
         border.CornerRadius = new CornerRadius(14);
         border.Width = width;
         border.Height = height;
+        Canvas.SetLeft(border, offsetX);
+        Canvas.SetTop(border, offsetY);
         canvas.Children.Add(border);
 
         //Horizontal
