@@ -40,11 +40,17 @@ __Versatile Printing Options:__ Print individual cards or entire batches with ju
 <details>
   <summary>text</summary>
   <p>- required elements: x, y, name, size</p>
-  <p>- optional elements: value</p>
+  <p>- optional elements: rotation, value</p>
 </details>
 <details>
   <summary>image</summary>
   <p>- required elements: x, y, path, width or heigth</p>
+  <p>- optional elements: rotation</p>
+</details>
+<details>
+  <summary>rectangle</summary>
+  <p>- required elements: x, y, name, width, heigth, color</p>
+  <p>- optional elements: rotation</p>
 </details>
 
 ### positioning of the fields using coordinates
